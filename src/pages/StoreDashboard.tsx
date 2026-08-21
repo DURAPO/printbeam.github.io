@@ -108,11 +108,12 @@ export default function StoreDashboard() {
     await toggleAutoAccept({ storeId: store._id });
   };
 
-  // No store — redirect to onboarding
-  if (stores !== undefined && stores.length === 0) {
-    navigate("/store-onboarding");
-    return null;
-  }
+  // No store — redirect to onboarding (in effect, not render)
+  useEffect(() => {
+    if (stores !== undefined && stores.length === 0) {
+      navigate("/store-onboarding", { replace: true });
+    }
+  }, [stores, navigate]);
 
   if (!store) {
     return (
@@ -196,7 +197,7 @@ export default function StoreDashboard() {
 
         <AnimatePresence mode="wait">
           {activeTab === "queue" && (
-            <LiveQueue key="queue" storeId={store._id} onTabChange={setActiveTab} />
+            <LiveQueue key="queue" storeId={store._id} />
           )}
           {activeTab === "history" && (
             <PrintingHistory key="history" storeId={store._id} />
@@ -218,13 +219,7 @@ export default function StoreDashboard() {
 
 /* ── Live Queue ──────────────────────────────────────────────────────── */
 
-function LiveQueue({
-  storeId,
-  onTabChange,
-}: {
-  storeId: Id<"stores">;
-  onTabChange: (t: Tab) => void;
-}) {
+function LiveQueue({ storeId }: { storeId: Id<"stores"> }) {
   const pendingOrders = useQuery(api.orders.listByStoreAndStatus, {
     storeId,
     status: "pending",
@@ -247,11 +242,8 @@ function LiveQueue({
   const startPrinting = useMutation(api.orders.startPrinting);
   const markDone = useMutation(api.orders.markDone);
   const markFailed = useMutation(api.orders.markFailed);
-  const retryOrder = useMutation(api.orders.retry);
 
   const printers = useQuery(api.printers.listOnlineByStore, { storeId });
-
-  const [selectedPrinter, setSelectedPrinter] = useState<Id<"printers"> | null>(null);
 
   const formatDate = (ts: number) =>
     new Date(ts).toLocaleDateString("en-US", {
@@ -388,7 +380,7 @@ function LiveQueue({
                         if (printers && printers.length > 0) {
                           await startPrinting({
                             orderId: order._id,
-                            printerId: selectedPrinter || printers[0]._id,
+                            printerId: printers[0]._id,
                           });
                         }
                       }}
@@ -416,7 +408,7 @@ function LiveQueue({
                         if (printers && printers.length > 0) {
                           await startPrinting({
                             orderId: order._id,
-                            printerId: selectedPrinter || printers[0]._id,
+                            printerId: printers[0]._id,
                           });
                         }
                       }}

@@ -60,11 +60,6 @@ export default function NewPrint() {
   const onlineStores = useQuery(api.stores.listOnline, {});
   const createOrder = useMutation(api.orders.create);
   const generateUploadUrl = useMutation(api.uploads.generateUploadUrl);
-  const confirmStore = useQuery(
-    api.stores.confirmStore,
-    // @ts-expect-error Id type mismatch workaround
-    {}
-  );
 
   const [step, setStep] = useState<Step>("upload");
   const [isSubmitting, setIsSubmitting] = useState(false);
