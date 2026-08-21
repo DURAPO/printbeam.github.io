@@ -20,13 +20,7 @@ export const listByUser = query({
 export const get = query({
   args: { jobId: v.id("printJobs") },
   handler: async (ctx, args) => {
-    const job = await ctx.db.get(args.jobId);
-    if (!job) return null;
-
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity || job.userId !== identity.subject) return null;
-
-    return job;
+    return await ctx.db.get(args.jobId);
   },
 });
 
@@ -42,7 +36,6 @@ export const create = mutation({
     doubleSided: v.boolean(),
     notes: v.optional(v.string()),
     scheduledAt: v.optional(v.number()),
-    amount: v.number(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -60,8 +53,7 @@ export const create = mutation({
       doubleSided: args.doubleSided,
       notes: args.notes,
       scheduledAt: args.scheduledAt,
-      amount: args.amount,
-      status: args.scheduledAt ? "scheduled" : "pending",
+      status: "pending",
       createdAt: Date.now(),
     });
 
@@ -97,12 +89,47 @@ export const stats = query({
     return {
       total: jobs.length,
       pending: jobs.filter(
-        (j) =>
-          j.status === "pending" ||
-          j.status === "scheduled" ||
-          j.status === "processing",
+        (j) => j.status === "pending" || j.status === "processing",
       ).length,
       completed: jobs.filter((j) => j.status === "completed").length,
     };
+  },
+});
+
+// Comments
+export const listComments = query({
+  args: { jobId: v.id("printJobs") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("comments")
+      .withIndex("by_job_created", (q) => q.eq("jobId", args.jobId))
+      .order("asc")
+      .collect();
+  },
+});
+
+export const addComment = mutation({
+  args: {
+    jobId: v.id("printJobs"),
+    text: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) =>
+        q.eq("email", identity.email as string),
+      )
+      .first();
+
+    await ctx.db.insert("comments", {
+      jobId: args.jobId,
+      userId: identity.subject,
+      userName: user?.name || identity.name || "Team member",
+      text: args.text,
+      createdAt: Date.now(),
+    });
   },
 });

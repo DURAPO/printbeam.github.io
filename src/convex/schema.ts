@@ -49,10 +49,8 @@ const schema = defineSchema(
       doubleSided: v.boolean(),
       notes: v.optional(v.string()),
       scheduledAt: v.optional(v.number()),
-      amount: v.number(),
       status: v.union(
         v.literal("pending"),
-        v.literal("scheduled"),
         v.literal("processing"),
         v.literal("ready"),
         v.literal("completed"),
@@ -64,15 +62,15 @@ const schema = defineSchema(
       .index("by_status", ["status"])
       .index("by_user_created", ["userId", "createdAt"]),
 
-    messages: defineTable({
-      printJobId: v.id("printJobs"),
+    comments: defineTable({
+      jobId: v.id("printJobs"),
       userId: v.string(),
-      userName: v.string(),
-      content: v.string(),
+      userName: v.optional(v.string()),
+      text: v.string(),
       createdAt: v.number(),
     })
-      .index("by_job", ["printJobId"])
-      .index("by_job_created", ["printJobId", "createdAt"]),
+      .index("by_job", ["jobId"])
+      .index("by_job_created", ["jobId", "createdAt"]),
   },
   {
     schemaValidation: false,
