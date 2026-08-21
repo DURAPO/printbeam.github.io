@@ -2,7 +2,6 @@ import { authTables } from "@convex-dev/auth/server";
 import { defineSchema, defineTable } from "convex/server";
 import { Infer, v } from "convex/values";
 
-// default user roles. can add / remove based on the project as needed
 export const ROLES = {
   ADMIN: "admin",
   USER: "user",
@@ -18,10 +17,8 @@ export type Role = Infer<typeof roleValidator>;
 
 const schema = defineSchema(
   {
-    // default auth tables using convex auth.
-    ...authTables, // do not remove or modify
+    ...authTables,
 
-    // the users table is the default users table that is brought in by the authTables
     users: defineTable({
       name: v.optional(v.string()),
       image: v.optional(v.string()),
@@ -51,17 +48,31 @@ const schema = defineSchema(
       paperSize: v.string(),
       doubleSided: v.boolean(),
       notes: v.optional(v.string()),
+      scheduledAt: v.optional(v.number()),
+      amount: v.number(),
       status: v.union(
         v.literal("pending"),
+        v.literal("scheduled"),
         v.literal("processing"),
         v.literal("ready"),
         v.literal("completed"),
         v.literal("cancelled"),
       ),
       createdAt: v.number(),
-    }).index("by_user", ["userId"])
+    })
+      .index("by_user", ["userId"])
       .index("by_status", ["status"])
       .index("by_user_created", ["userId", "createdAt"]),
+
+    messages: defineTable({
+      printJobId: v.id("printJobs"),
+      userId: v.string(),
+      userName: v.string(),
+      content: v.string(),
+      createdAt: v.number(),
+    })
+      .index("by_job", ["printJobId"])
+      .index("by_job_created", ["printJobId", "createdAt"]),
   },
   {
     schemaValidation: false,

@@ -42,44 +42,46 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-surface: var(--surface);
 }
 
-/* Light Terminal Theme — off-white surfaces, green/amber accents, monospace feel */
+/* Premium monospace theme — clean surfaces, precise accents, serious feel */
 :root {
   --radius: 0.375rem;
-  --background: #f7f6f3;
-  --foreground: #1a1a1a;
+  --background: #fafaf8;
+  --foreground: #111111;
   --card: #ffffff;
-  --card-foreground: #1a1a1a;
+  --card-foreground: #111111;
   --popover: #ffffff;
-  --popover-foreground: #1a1a1a;
-  --primary: #1a1a1a;
-  --primary-foreground: #f7f6f3;
-  --secondary: #edeae5;
-  --secondary-foreground: #1a1a1a;
-  --muted: #edeae5;
-  --muted-foreground: #6b6b6b;
-  --accent: #e6f5e6;
-  --accent-foreground: #1a5c1a;
-  --destructive: #c0392b;
-  --border: #d4d0c8;
-  --input: #d4d0c8;
-  --ring: #3d8b37;
-  --chart-1: #3d8b37;
-  --chart-2: #d4a017;
-  --chart-3: #2874a6;
-  --chart-4: #8e44ad;
-  --chart-5: #c0392b;
-  --sidebar: #edeae5;
-  --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #3d8b37;
-  --sidebar-primary-foreground: #f7f6f3;
-  --sidebar-accent: #e6f5e6;
-  --sidebar-accent-foreground: #1a5c1a;
-  --sidebar-border: #d4d0c8;
-  --sidebar-ring: #3d8b37;
-  --success: #3d8b37;
-  --warning: #d4a017;
+  --popover-foreground: #111111;
+  --primary: #111111;
+  --primary-foreground: #fafaf8;
+  --secondary: #f0efe9;
+  --secondary-foreground: #111111;
+  --muted: #f0efe9;
+  --muted-foreground: #666666;
+  --accent: #e8f5e9;
+  --accent-foreground: #1b5e20;
+  --destructive: #b71c1c;
+  --border: #e0dfd8;
+  --input: #e0dfd8;
+  --ring: #2e7d32;
+  --chart-1: #2e7d32;
+  --chart-2: #f9a825;
+  --chart-3: #1565c0;
+  --chart-4: #6a1b9a;
+  --chart-5: #c62828;
+  --sidebar: #f0efe9;
+  --sidebar-foreground: #111111;
+  --sidebar-primary: #2e7d32;
+  --sidebar-primary-foreground: #fafaf8;
+  --sidebar-accent: #e8f5e9;
+  --sidebar-accent-foreground: #1b5e20;
+  --sidebar-border: #e0dfd8;
+  --sidebar-ring: #2e7d32;
+  --success: #2e7d32;
+  --warning: #f9a825;
+  --surface: #f5f4ef;
 }
 
 @layer base {
@@ -89,9 +91,17 @@
   body {
     @apply bg-background text-foreground;
     font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", "Cascadia Code", ui-monospace, monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   button:not([disabled]),
   [role="button"]:not([disabled]) {
     cursor: pointer;
   }
+}
+
+/* Premium selection color */
+::selection {
+  background: #2e7d3220;
+  color: #111111;
 }

@@ -1,14 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  Printer,
-  MapPin,
-  FileUp,
-  CheckCircle2,
-  ArrowRight,
-  Zap,
-  Shield,
-  Clock,
-} from "lucide-react";
+import { Zap, Shield, Clock, ArrowRight, Layers } from "lucide-react";
 import { useNavigate } from "react-router";
 
 const fadeUp = {
@@ -20,48 +11,17 @@ const fadeUp = {
   }),
 };
 
-const steps = [
-  {
-    icon: MapPin,
-    label: "Pick a store",
-    description: "Choose a nearby print shop from our curated list.",
-    command: "$ locate --nearby stores",
-  },
-  {
-    icon: FileUp,
-    label: "Upload your file",
-    description: "Drop your PDF, image, or document — set copies and options.",
-    command: "$ upload --file document.pdf",
-  },
-  {
-    icon: CheckCircle2,
-    label: "Confirm & go",
-    description: "Review details, submit, and pick up when it's ready.",
-    command: "$ submit --wait ready",
-  },
+const capabilities = [
+  { icon: Zap, title: "Under a minute", description: "From file upload to print submission in seconds. No phone calls, no drive-by stops." },
+  { icon: Clock, title: "Schedule ahead", description: "Book a pickup window that works for you. Morning, afternoon, or end of day." },
+  { icon: Layers, title: "Full control", description: "Color, paper size, duplex, copies — every option you need, none you don't." },
+  { icon: Shield, title: "Team-grade security", description: "Files encrypted in transit, never stored longer than needed, accessible only to you." },
 ];
 
-const features = [
-  {
-    icon: Zap,
-    title: "Lightning fast",
-    description: "From upload to print shop in under a minute. No phone calls.",
-  },
-  {
-    icon: Shield,
-    title: "Secure transfers",
-    description: "Files are encrypted in transit and never stored longer than needed.",
-  },
-  {
-    icon: Clock,
-    title: "Real-time status",
-    description: "Track your job from pending to ready for pickup.",
-  },
-  {
-    icon: Printer,
-    title: "Multi-format support",
-    description: "PDFs, images, documents — we handle the common formats.",
-  },
+const stats = [
+  { value: "<60s", label: "average turnaround" },
+  { value: "100%", label: "encrypted transfers" },
+  { value: "24/7", label: "queue visibility" },
 ];
 
 export default function Landing() {
@@ -69,231 +29,129 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-background font-mono">
-      {/* Nav */}
       <nav className="border-b border-border/60 bg-card/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex size-8 items-center justify-center rounded bg-success/15 text-success">
-              <Printer className="size-4" />
+            <div className="flex size-8 items-center justify-center rounded-md bg-success/10 text-success border border-success/20">
+              <Zap className="size-4" />
             </div>
-            <span className="text-sm font-bold tracking-tight">
-              cloud_print_pixie
-            </span>
+            <span className="text-sm font-bold tracking-tight">PrintBeam</span>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate("/auth")}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
-            >
-              sign in
-            </button>
-            <button
-              onClick={() => navigate("/auth")}
-              className="rounded-md bg-foreground text-background px-4 py-1.5 text-xs font-medium hover:bg-foreground/90 transition-colors"
-            >
-              get started
-            </button>
+            <button onClick={() => navigate("/auth")} className="text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Sign in</button>
+            <button onClick={() => navigate("/auth")} className="rounded-md bg-foreground text-background px-4 py-2 text-xs font-medium hover:bg-foreground/90 transition-colors">Get started</button>
           </div>
         </div>
       </nav>
 
-      {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60">
         <div className="mx-auto max-w-5xl px-6 py-20 md:py-28">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            className="max-w-2xl"
-          >
-            <motion.div
-              variants={fadeUp}
-              custom={0}
-              className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs text-success mb-6"
-            >
-              <span className="size-1.5 rounded-full bg-success animate-pulse" />
-              v1.0 — now available
+          <motion.div initial="hidden" animate="visible" className="max-w-2xl">
+            <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 rounded-full border border-success/20 bg-success/5 px-3 py-1 text-[11px] text-success mb-6 font-medium tracking-wide">
+              <span className="size-1.5 rounded-full bg-success" />
+              Internal print infrastructure
             </motion.div>
-
-            <motion.h1
-              variants={fadeUp}
-              custom={1}
-              className="text-3xl md:text-5xl font-bold tracking-tight leading-tight"
-            >
-              Send print jobs
-              <br />
-              in a few clicks.
+            <motion.h1 variants={fadeUp} custom={1} className="text-3xl md:text-5xl font-bold tracking-tight leading-[1.15]">
+              Print anything.<br />In under a minute.
             </motion.h1>
-
-            <motion.p
-              variants={fadeUp}
-              custom={2}
-              className="mt-5 text-muted-foreground text-sm md:text-base leading-relaxed max-w-lg"
-            >
-              Cloud Print Pixie lets you pick a local store, upload your file,
-              and submit a print job — no calls, no lines, no hassle.
+            <motion.p variants={fadeUp} custom={2} className="mt-5 text-muted-foreground text-sm md:text-base leading-relaxed max-w-lg">
+              PrintBeam lets your team submit print jobs to any connected pressroom — pick a location, upload your file, schedule a time, and check out. No friction, no delays.
             </motion.p>
-
-            <motion.div
-              variants={fadeUp}
-              custom={3}
-              className="mt-8 flex flex-wrap gap-3"
-            >
-              <button
-                onClick={() => navigate("/auth")}
-                className="inline-flex items-center gap-2 rounded-md bg-success text-white px-5 py-2.5 text-sm font-medium hover:bg-success/90 transition-colors"
-              >
-                Start printing
-                <ArrowRight className="size-4" />
+            <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
+              <button onClick={() => navigate("/auth")} className="inline-flex items-center gap-2 rounded-md bg-success text-white px-5 py-2.5 text-sm font-medium hover:bg-success/90 transition-colors">
+                Start printing <ArrowRight className="size-4" />
               </button>
-              <button
-                onClick={() =>
-                  document
-                    .getElementById("how-it-works")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm font-medium hover:bg-muted transition-colors"
-              >
+              <button onClick={() => document.getElementById("capabilities")?.scrollIntoView({ behavior: "smooth" })} className="inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm font-medium hover:bg-muted transition-colors">
                 See how it works
               </button>
             </motion.div>
           </motion.div>
         </div>
+        <div className="absolute right-8 top-16 hidden lg:block text-success/15 select-none">
+          <pre className="text-[11px] leading-5 font-mono">
+{`$ printbeam submit \\
+  --file deck-v3.pdf \\
+  --store pressroom-a \\
+  --schedule 2pm \\
+  --copies 3
 
-        {/* Decorative terminal prompt */}
-        <div className="absolute right-8 top-16 hidden lg:block text-success/20 select-none">
-          <pre className="text-xs leading-5 font-mono">
-{`> pixie.init()
-> pixie.find_stores()
-> pixie.upload("file.pdf")
-> pixie.submit()
-  ✓ done`}
+  ✓ queued · ready by 2:15pm`}
           </pre>
         </div>
       </section>
 
-      {/* How it works */}
-      <section id="how-it-works" className="border-b border-border/60">
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mb-10"
-          >
-            <p className="text-xs text-success font-medium mb-2">// how it works</p>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-              Three steps. Done.
-            </h2>
-          </motion.div>
+      <section className="border-b border-border/60 bg-surface/50">
+        <div className="mx-auto max-w-5xl px-6 py-6 grid grid-cols-3 gap-6">
+          {stats.map((stat, i) => (
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
+              <p className="text-lg md:text-xl font-bold text-success">{stat.value}</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5 tracking-wide">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {steps.map((step, i) => (
-              <motion.div
-                key={step.label}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12 }}
-                className="rounded-lg border border-border bg-card p-5"
-              >
+      <section id="capabilities" className="border-b border-border/60">
+        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-10">
+            <p className="text-[11px] text-success font-medium mb-2 tracking-wide">// capabilities</p>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Built for internal workflows.</h2>
+          </motion.div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {capabilities.map((cap, i) => (
+              <motion.div key={cap.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-lg border border-border bg-card p-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="flex size-8 items-center justify-center rounded bg-success/10 text-success">
-                    <step.icon className="size-4" />
-                  </div>
-                  <span className="text-xs text-muted-foreground">
-                    step {String(i + 1).padStart(2, "0")}
-                  </span>
+                  <div className="flex size-9 items-center justify-center rounded-md bg-success/8 text-success border border-success/15"><cap.icon className="size-4" /></div>
+                  <h3 className="text-sm font-semibold">{cap.title}</h3>
                 </div>
-                <h3 className="text-sm font-semibold mb-1">{step.label}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed mb-3">
-                  {step.description}
-                </p>
-                <code className="block text-xs text-success/70 bg-success/5 rounded px-2 py-1.5 font-mono">
-                  {step.command}
-                </code>
+                <p className="text-xs text-muted-foreground leading-relaxed">{cap.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features */}
       <section className="border-b border-border/60">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mb-10"
-          >
-            <p className="text-xs text-success font-medium mb-2">// features</p>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-              Built for speed and simplicity.
-            </h2>
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-10">
+            <p className="text-[11px] text-success font-medium mb-2 tracking-wide">// workflow</p>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Four steps. Done.</h2>
           </motion.div>
-
-          <div className="grid gap-6 sm:grid-cols-2">
-            {features.map((feat, i) => (
-              <motion.div
-                key={feat.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="flex gap-4 rounded-lg border border-border bg-card p-5"
-              >
-                <div className="flex size-9 shrink-0 items-center justify-center rounded bg-muted text-foreground">
-                  <feat.icon className="size-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold mb-1">{feat.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {feat.description}
-                  </p>
-                </div>
+          <div className="grid gap-4 md:grid-cols-4">
+            {[
+              { step: "01", label: "Pick a pressroom", code: "printbeam pick" },
+              { step: "02", label: "Upload your file", code: "printbeam upload" },
+              { step: "03", label: "Schedule pickup", code: "printbeam book" },
+              { step: "04", label: "Check out", code: "printbeam pay" },
+            ].map((item, i) => (
+              <motion.div key={item.step} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-lg border border-border bg-card p-4">
+                <span className="text-[10px] text-success font-medium tracking-wider">{item.step}</span>
+                <h3 className="text-sm font-semibold mt-1.5 mb-2">{item.label}</h3>
+                <code className="block text-[11px] text-muted-foreground/70 bg-surface rounded px-2 py-1 font-mono">$ {item.code}</code>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
       <section>
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
-              Ready to print?
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">
-              Sign up in seconds and send your first print job in under a minute.
-            </p>
-            <button
-              onClick={() => navigate("/auth")}
-              className="inline-flex items-center gap-2 rounded-md bg-success text-white px-6 py-2.5 text-sm font-medium hover:bg-success/90 transition-colors"
-            >
-              Get started — it's free
-              <ArrowRight className="size-4" />
+        <div className="mx-auto max-w-5xl px-6 py-16 md:py-24 text-center">
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Ready to print?</h2>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">Sign in with your team credentials and submit your first job in under sixty seconds.</p>
+            <button onClick={() => navigate("/auth")} className="inline-flex items-center gap-2 rounded-md bg-success text-white px-6 py-2.5 text-sm font-medium hover:bg-success/90 transition-colors">
+              Open PrintBeam <ArrowRight className="size-4" />
             </button>
           </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border/60 bg-muted/30">
+      <footer className="border-t border-border/60 bg-surface/50">
         <div className="mx-auto max-w-5xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Printer className="size-3" />
-            <span className="font-medium">cloud_print_pixie</span>
-            <span className="text-border">|</span>
-            <span>v1.0.0</span>
+            <Zap className="size-3 text-success" /><span className="font-semibold">PrintBeam</span><span className="text-border">·</span><span>v1.0.0</span>
           </div>
-          <p className="text-xs text-muted-foreground/60">
-            © {new Date().getFullYear()} Cloud Print Pixie. All rights reserved.
-          </p>
+          <p className="text-[11px] text-muted-foreground/60">© {new Date().getFullYear()} PrintBeam. Internal use only.</p>
         </div>
       </footer>
     </div>
