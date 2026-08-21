@@ -67,7 +67,7 @@ const schema = defineSchema(
     messages: defineTable({
       printJobId: v.id("printJobs"),
       userId: v.string(),
-      userName: v.optional(v.string()),
+      userName: v.string(),
       content: v.string(),
       createdAt: v.number(),
     })

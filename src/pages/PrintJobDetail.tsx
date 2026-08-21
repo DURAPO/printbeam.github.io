@@ -184,7 +184,7 @@ export default function PrintJobDetail() {
                       key={msg._id}
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`rounded-lg border border-border p-3 ${msg.userId === user?._id ? "bg-success/[0.03] border-success/20" : "bg-card"}`}
+                      className={`rounded-lg border border-border p-3 ${msg.userId === user?.id ? "bg-success/[0.03] border-success/20" : "bg-card"}`}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-[11px] font-medium">{msg.userName}</span>

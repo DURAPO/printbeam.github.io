@@ -20,7 +20,13 @@ export const listByUser = query({
 export const get = query({
   args: { jobId: v.id("printJobs") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.jobId);
+    const job = await ctx.db.get(args.jobId);
+    if (!job) return null;
+
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity || job.userId !== identity.subject) return null;
+
+    return job;
   },
 });
 
@@ -36,6 +42,7 @@ export const create = mutation({
     doubleSided: v.boolean(),
     notes: v.optional(v.string()),
     scheduledAt: v.optional(v.number()),
+    amount: v.number(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -53,7 +60,8 @@ export const create = mutation({
       doubleSided: args.doubleSided,
       notes: args.notes,
       scheduledAt: args.scheduledAt,
-      status: "pending",
+      amount: args.amount,
+      status: args.scheduledAt ? "scheduled" : "pending",
       createdAt: Date.now(),
     });
 
@@ -89,7 +97,10 @@ export const stats = query({
     return {
       total: jobs.length,
       pending: jobs.filter(
-        (j) => j.status === "pending" || j.status === "processing",
+        (j) =>
+          j.status === "pending" ||
+          j.status === "scheduled" ||
+          j.status === "processing",
       ).length,
       completed: jobs.filter((j) => j.status === "completed").length,
     };

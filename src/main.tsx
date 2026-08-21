@@ -142,14 +142,6 @@ createRoot(document.getElementById("root")!).render(
                   </RequireAuth>
                 }
               />
-              <Route
-                path="/print/:id"
-                element={
-                  <RequireAuth>
-                    <PrintJobDetail />
-                  </RequireAuth>
-                }
-              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
