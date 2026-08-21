@@ -41,8 +41,6 @@ export const create = mutation({
     paperSize: v.string(),
     doubleSided: v.boolean(),
     notes: v.optional(v.string()),
-    scheduledAt: v.optional(v.number()),
-    amount: v.number(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -59,9 +57,7 @@ export const create = mutation({
       paperSize: args.paperSize,
       doubleSided: args.doubleSided,
       notes: args.notes,
-      scheduledAt: args.scheduledAt,
-      amount: args.amount,
-      status: args.scheduledAt ? "scheduled" : "pending",
+      status: "pending",
       createdAt: Date.now(),
     });
 
@@ -97,10 +93,7 @@ export const stats = query({
     return {
       total: jobs.length,
       pending: jobs.filter(
-        (j) =>
-          j.status === "pending" ||
-          j.status === "scheduled" ||
-          j.status === "processing",
+        (j) => j.status === "pending" || j.status === "processing",
       ).length,
       completed: jobs.filter((j) => j.status === "completed").length,
     };

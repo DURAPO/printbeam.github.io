@@ -1,3 +1,4 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -23,9 +24,9 @@ export const send = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as any);
-    const userName =
-      user && "name" in user ? (user as any).name || "Team member" : "Team member";
+    const userId = await getAuthUserId(ctx);
+    const user = userId ? await ctx.db.get(userId) : null;
+    const userName = user?.name || identity.name || "Team member";
 
     return await ctx.db.insert("messages", {
       printJobId: args.printJobId,

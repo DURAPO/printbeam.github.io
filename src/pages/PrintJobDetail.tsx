@@ -14,14 +14,12 @@ import {
   Zap,
   Send,
   CheckCircle2,
-  Calendar,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import type { Id } from "@/convex/_generated/dataModel";
 
 const statusConfig: Record<string, { label: string; className: string; description: string }> = {
   pending: { label: "pending", className: "bg-warning/15 text-warning border-warning/30", description: "Your job is in the queue waiting to be processed." },
-  scheduled: { label: "scheduled", className: "bg-chart-3/15 text-chart-3 border-chart-3/30", description: "Your job has been scheduled for a pickup window." },
   processing: { label: "processing", className: "bg-chart-3/15 text-chart-3 border-chart-3/30", description: "Your job is currently being printed." },
   ready: { label: "ready", className: "bg-success/15 text-success border-success/30", description: "Your job is ready for pickup at the pressroom." },
   completed: { label: "completed", className: "bg-success/15 text-success border-success/30", description: "This job has been completed and picked up." },
@@ -156,7 +154,6 @@ export default function PrintJobDetail() {
             <CardHeader className="pb-3"><CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">Order details</CardTitle></CardHeader>
             <CardContent className="space-y-2.5">
               <DetailRow label="Pressroom" value={job.storeName} icon={<MapPin className="size-3 text-muted-foreground" />} />
-              {job.scheduledAt && <DetailRow label="Scheduled" value={formatDate(job.scheduledAt)} icon={<Calendar className="size-3 text-muted-foreground" />} />}
               {job.notes && <DetailRow label="Notes" value={job.notes} />}
             </CardContent>
           </Card>

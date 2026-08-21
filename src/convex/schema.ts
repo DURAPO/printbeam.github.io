@@ -48,11 +48,8 @@ const schema = defineSchema(
       paperSize: v.string(),
       doubleSided: v.boolean(),
       notes: v.optional(v.string()),
-      scheduledAt: v.optional(v.number()),
-      amount: v.number(),
       status: v.union(
         v.literal("pending"),
-        v.literal("scheduled"),
         v.literal("processing"),
         v.literal("ready"),
         v.literal("completed"),

@@ -23,10 +23,10 @@ import {
   Loader2,
 } from "lucide-react";
 import { useNavigate } from "react-router";
+import type { Id } from "@/convex/_generated/dataModel";
 
 const statusConfig: Record<string, { label: string; className: string; icon: React.ComponentType<{ className?: string }> }> = {
   pending: { label: "pending", className: "bg-warning/15 text-warning border-warning/30", icon: Clock },
-  scheduled: { label: "scheduled", className: "bg-chart-3/15 text-chart-3 border-chart-3/30", icon: Clock },
   processing: { label: "processing", className: "bg-chart-3/15 text-chart-3 border-chart-3/30", icon: Loader2 },
   ready: { label: "ready", className: "bg-success/15 text-success border-success/30", icon: CheckCircle2 },
   completed: { label: "completed", className: "bg-success/15 text-success border-success/30", icon: CheckCircle2 },
@@ -45,9 +45,9 @@ export default function Dashboard() {
     navigate("/");
   };
 
-  const handleCancel = async (jobId: string) => {
+  const handleCancel = async (jobId: Id<"printJobs">) => {
     try {
-      await cancelJob({ jobId: jobId as never });
+      await cancelJob({ jobId });
     } catch (err) {
       console.error("Failed to cancel:", err);
     }
@@ -140,7 +140,7 @@ export default function Dashboard() {
                             <TableCell><Badge variant="outline" className={`text-[10px] gap-1 ${sc.className}`}><StatusIcon className={`size-2.5 ${job.status === "processing" ? "animate-spin" : ""}`} />{sc.label}</Badge></TableCell>
                             <TableCell className="text-[11px] text-muted-foreground">{formatDate(job.createdAt)}</TableCell>
                             <TableCell className="text-right">
-                              {(job.status === "pending" || job.status === "scheduled" || job.status === "processing") && (
+                              {(job.status === "pending" || job.status === "processing") && (
                                 <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleCancel(job._id); }} className="text-[11px] text-destructive hover:text-destructive h-7">Cancel</Button>
                               )}
                             </TableCell>
