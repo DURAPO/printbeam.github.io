@@ -57,7 +57,6 @@ function countPdfPages(file: File): Promise<number> {
 
 export default function NewPrint() {
   const navigate = useNavigate();
-  const onlineStores = useQuery(api.stores.listOnline, {});
   const createOrder = useMutation(api.orders.create);
   const generateUploadUrl = useMutation(api.uploads.generateUploadUrl);
 
@@ -65,6 +64,7 @@ export default function NewPrint() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submittedOrderId, setSubmittedOrderId] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Upload state
   const [file, setFile] = useState<File | null>(null);
@@ -73,6 +73,12 @@ export default function NewPrint() {
   const [storageId, setStorageId] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Location
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   // Store state
   const [selectedStoreId, setSelectedStoreId] = useState<Id<"stores"> | null>(null);
@@ -85,10 +91,6 @@ export default function NewPrint() {
     storeName?: string;
   } | null>(null);
   const [storeMode, setStoreMode] = useState<"list" | "uid">("list");
-  const [userLocation, setUserLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
 
   // Options state
   const [binding, setBinding] = useState<"none" | "one_pin" | "tape" | "spiral">("none");
@@ -109,6 +111,13 @@ export default function NewPrint() {
       );
     }
   }, []);
+
+  const onlineStores = useQuery(
+    api.stores.listOnline,
+    userLocation
+      ? { latitude: userLocation.lat, longitude: userLocation.lng }
+      : {}
+  );
 
   // Sort stores by distance
   const sortedStores = onlineStores
@@ -133,7 +142,7 @@ export default function NewPrint() {
         else if (binding === "tape") bindingCost = selectedStore.rates.tape;
         else if (binding === "spiral") bindingCost = selectedStore.rates.spiral;
 
-        return ((perPage * pageCount + bindingCost) * copies).toFixed(2);
+        return ((perPage * pageCount * copies) + bindingCost).toFixed(2);
       })()
     : "0.00";
 
@@ -189,29 +198,19 @@ export default function NewPrint() {
     setStep("options");
   };
 
-  const handleUidLookup = async () => {
-    if (!uidInput.trim()) return;
-    // This would use a query, but since we don't have the validateUid wired up
-    // with the frontend properly, we'll find the store from the list
-    const match = sortedStores.find(
-      (s) => s.uid.toUpperCase() === uidInput.trim().toUpperCase()
-    );
-    if (!match) {
-      setUidResult({ valid: false, error: "Store not found or offline" });
-    } else if (match.status !== "online") {
-      setUidResult({ valid: false, error: "Store is currently offline" });
-    } else {
-      setUidResult({
-        valid: true,
-        storeId: match._id,
-        storeName: match.name,
-      });
-    }
-  };
+  const uidLookup = useQuery(
+    api.stores.validateUid,
+    uidInput.trim().length >= 6 ? { uid: uidInput.trim() } : "skip"
+  );
+
+  useEffect(() => {
+    if (uidLookup) setUidResult(uidLookup);
+  }, [uidLookup]);
 
   const handleSubmit = async () => {
     if (!selectedStoreId || !storageId || !file) return;
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const orderId = await createOrder({
         storeId: selectedStoreId,
@@ -226,8 +225,13 @@ export default function NewPrint() {
       });
       setSubmittedOrderId(orderId);
       setSubmitted(true);
-    } catch (err) {
-      console.error("Failed to submit order:", err);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to submit print request.";
+      if (msg.includes("offline")) {
+        setSubmitError("This store went offline. Pick another store or try again.");
+      } else {
+        setSubmitError(msg);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -600,8 +604,7 @@ export default function NewPrint() {
                         className="text-xs font-mono flex-1"
                       />
                       <Button
-                        onClick={handleUidLookup}
-                        disabled={!uidInput.trim()}
+                        disabled={!uidInput.trim() || uidLookup === undefined || uidLookup === null}
                         variant="outline"
                         className="text-xs"
                       >
@@ -843,7 +846,7 @@ export default function NewPrint() {
                 </Button>
                 <Button
                   onClick={() => setStep("confirm")}
-                  disabled={!customerPhone.trim()}
+                  disabled={!customerPhone.trim() || customerPhone.replace(/\D/g, "").length < 7}
                   className="flex-1 text-xs bg-success hover:bg-success/90 text-white"
                 >
                   Review order <ArrowRight className="size-3" />
@@ -902,6 +905,42 @@ export default function NewPrint() {
                   </div>
                 </CardContent>
               </Card>
+
+              {submitError && (
+                <div className="mt-4 rounded-lg border border-destructive/20 bg-destructive/5 p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle className="size-3.5 text-destructive shrink-0" />
+                    <p className="text-xs text-destructive font-medium">
+                      {submitError}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setSubmitError(null);
+                        handleSubmit();
+                      }}
+                      disabled={isSubmitting}
+                      className="text-[11px] h-7"
+                    >
+                      Retry
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setSubmitError(null);
+                        setStep("store");
+                      }}
+                      className="text-[11px] h-7"
+                    >
+                      Pick another store
+                    </Button>
+                  </div>
+                </div>
+              )}
 
               <div className="flex gap-3">
                 <Button
