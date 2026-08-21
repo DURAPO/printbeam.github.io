@@ -29,6 +29,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-background font-mono">
+      {/* Nav */}
       <nav className="border-b border-border/60 bg-card/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2.5">
@@ -44,6 +45,7 @@ export default function Landing() {
         </div>
       </nav>
 
+      {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60">
         <div className="mx-auto max-w-5xl px-6 py-20 md:py-28">
           <motion.div initial="hidden" animate="visible" className="max-w-2xl">
@@ -67,6 +69,7 @@ export default function Landing() {
             </motion.div>
           </motion.div>
         </div>
+        {/* Decorative terminal prompt */}
         <div className="absolute right-8 top-16 hidden lg:block text-success/15 select-none">
           <pre className="text-[11px] leading-5 font-mono">
 {`$ printbeam submit \\
@@ -80,6 +83,7 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Stats */}
       <section className="border-b border-border/60 bg-surface/50">
         <div className="mx-auto max-w-5xl px-6 py-6 grid grid-cols-3 gap-6">
           {stats.map((stat, i) => (
@@ -91,6 +95,7 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Capabilities */}
       <section id="capabilities" className="border-b border-border/60">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-10">
@@ -111,6 +116,7 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Workflow */}
       <section className="border-b border-border/60">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-10">
@@ -122,7 +128,7 @@ export default function Landing() {
               { step: "01", label: "Pick a pressroom", code: "printbeam pick" },
               { step: "02", label: "Upload your file", code: "printbeam upload" },
               { step: "03", label: "Schedule pickup", code: "printbeam book" },
-              { step: "04", label: "Check out", code: "printbeam pay" },
+              { step: "04", label: "Confirm & submit", code: "printbeam send" },
             ].map((item, i) => (
               <motion.div key={item.step} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-lg border border-border bg-card p-4">
                 <span className="text-[10px] text-success font-medium tracking-wider">{item.step}</span>
@@ -134,6 +140,7 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* CTA */}
       <section>
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24 text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -146,6 +153,7 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="border-t border-border/60 bg-surface/50">
         <div className="mx-auto max-w-5xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">

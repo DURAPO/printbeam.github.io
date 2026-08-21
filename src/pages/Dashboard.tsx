@@ -21,7 +21,6 @@ import {
   Clock,
   CheckCircle2,
   Loader2,
-  DollarSign,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 
@@ -59,8 +58,6 @@ export default function Dashboard() {
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
   };
 
-  const totalSpent = jobs?.reduce((sum, j) => sum + (j.amount || 0), 0) ?? 0;
-
   return (
     <div className="min-h-screen bg-background font-mono">
       <header className="border-b border-border/60 bg-card/80 backdrop-blur-sm sticky top-0 z-50">
@@ -91,17 +88,16 @@ export default function Dashboard() {
               <Plus className="size-3.5" /> New print job
             </Button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <StatCard label="total jobs" value={stats?.total ?? "—"} icon={FileText} />
             <StatCard label="in progress" value={stats?.pending ?? "—"} icon={Clock} accent="warning" />
             <StatCard label="completed" value={stats?.completed ?? "—"} icon={CheckCircle2} accent="success" />
-            <StatCard label="total spent" value={totalSpent > 0 ? `$${totalSpent.toFixed(2)}` : "—"} icon={DollarSign} accent="success" />
           </div>
         </div>
 
         <Card className="border-border">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Recent print jobs</CardTitle>
+            <CardTitle className="text-sm">Your print jobs</CardTitle>
           </CardHeader>
           <CardContent>
             {jobs === undefined ? (
@@ -114,6 +110,7 @@ export default function Dashboard() {
               </div>
             ) : (
               <>
+                {/* Desktop table */}
                 <div className="hidden md:block">
                   <Table>
                     <TableHeader>
@@ -121,7 +118,6 @@ export default function Dashboard() {
                         <TableHead className="text-[11px] text-muted-foreground">File</TableHead>
                         <TableHead className="text-[11px] text-muted-foreground">Pressroom</TableHead>
                         <TableHead className="text-[11px] text-muted-foreground">Options</TableHead>
-                        <TableHead className="text-[11px] text-muted-foreground">Amount</TableHead>
                         <TableHead className="text-[11px] text-muted-foreground">Status</TableHead>
                         <TableHead className="text-[11px] text-muted-foreground">Date</TableHead>
                         <TableHead className="text-[11px] text-muted-foreground text-right">Action</TableHead>
@@ -129,7 +125,7 @@ export default function Dashboard() {
                     </TableHeader>
                     <TableBody>
                       {jobs.map((job) => {
-                        const sc = statusConfig[job.status];
+                        const sc = statusConfig[job.status] || statusConfig.pending;
                         const StatusIcon = sc.icon;
                         return (
                           <TableRow key={job._id} className="border-border cursor-pointer hover:bg-muted/30" onClick={() => navigate(`/print/${job._id}`)}>
@@ -141,7 +137,6 @@ export default function Dashboard() {
                             </TableCell>
                             <TableCell className="text-xs text-muted-foreground"><span className="truncate max-w-[130px] block">{job.storeName}</span></TableCell>
                             <TableCell className="text-[11px] text-muted-foreground">{job.copies}× · {job.color ? "color" : "B&W"} · {job.paperSize.split(" ")[0]}</TableCell>
-                            <TableCell className="text-xs font-medium text-success">{job.amount > 0 ? `$${job.amount.toFixed(2)}` : "—"}</TableCell>
                             <TableCell><Badge variant="outline" className={`text-[10px] gap-1 ${sc.className}`}><StatusIcon className={`size-2.5 ${job.status === "processing" ? "animate-spin" : ""}`} />{sc.label}</Badge></TableCell>
                             <TableCell className="text-[11px] text-muted-foreground">{formatDate(job.createdAt)}</TableCell>
                             <TableCell className="text-right">
@@ -155,9 +150,10 @@ export default function Dashboard() {
                     </TableBody>
                   </Table>
                 </div>
+                {/* Mobile cards */}
                 <div className="md:hidden space-y-3">
                   {jobs.map((job) => {
-                    const sc = statusConfig[job.status];
+                    const sc = statusConfig[job.status] || statusConfig.pending;
                     const StatusIcon = sc.icon;
                     return (
                       <div key={job._id} className="rounded-lg border border-border bg-background p-3 cursor-pointer" onClick={() => navigate(`/print/${job._id}`)}>
@@ -171,7 +167,6 @@ export default function Dashboard() {
                         <p className="text-[11px] text-muted-foreground mb-1">{job.storeName}</p>
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] text-muted-foreground/70">{job.copies}× · {job.color ? "color" : "B&W"} · {formatDate(job.createdAt)}</span>
-                          <span className="text-[10px] font-medium text-success">{job.amount > 0 ? `$${job.amount.toFixed(2)}` : ""}</span>
                         </div>
                       </div>
                     );

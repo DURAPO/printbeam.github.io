@@ -15,7 +15,6 @@ import {
   Send,
   CheckCircle2,
   Calendar,
-  CreditCard,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -112,7 +111,7 @@ export default function PrintJobDetail() {
             <button onClick={() => navigate("/dashboard")} className="text-muted-foreground hover:text-foreground transition-colors"><ArrowLeft className="size-4" /></button>
             <div className="flex items-center gap-2">
               <Zap className="size-4 text-success" />
-              <span className="text-xs font-bold">Print Job Detail</span>
+              <span className="text-xs font-bold">Job Detail</span>
             </div>
           </div>
           <Badge variant="outline" className={`text-[10px] gap-1 ${sc.className}`}>{sc.label}</Badge>
@@ -158,8 +157,6 @@ export default function PrintJobDetail() {
             <CardContent className="space-y-2.5">
               <DetailRow label="Pressroom" value={job.storeName} icon={<MapPin className="size-3 text-muted-foreground" />} />
               {job.scheduledAt && <DetailRow label="Scheduled" value={formatDate(job.scheduledAt)} icon={<Calendar className="size-3 text-muted-foreground" />} />}
-              <DetailRow label="Payment" value="Team balance" icon={<CreditCard className="size-3 text-muted-foreground" />} />
-              <DetailRow label="Total" value={`$${(job.amount || 0).toFixed(2)}`} valueClassName="text-success font-bold" />
               {job.notes && <DetailRow label="Notes" value={job.notes} />}
             </CardContent>
           </Card>
@@ -184,7 +181,7 @@ export default function PrintJobDetail() {
                       key={msg._id}
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`rounded-lg border border-border p-3 ${msg.userId === user?.id ? "bg-success/[0.03] border-success/20" : "bg-card"}`}
+                      className={`rounded-lg border border-border p-3 ${msg.userId === user?._id?.toString() ? "bg-success/[0.03] border-success/20" : "bg-card"}`}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-[11px] font-medium">{msg.userName}</span>
@@ -224,11 +221,11 @@ export default function PrintJobDetail() {
   );
 }
 
-function DetailRow({ label, value, icon, valueClassName }: { label: string; value: string; icon?: React.ReactNode; valueClassName?: string }) {
+function DetailRow({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
   return (
     <div className="flex items-baseline justify-between gap-4 text-xs">
       <span className="text-muted-foreground shrink-0 flex items-center gap-1.5">{icon}{label}</span>
-      <span className={`text-right truncate ${valueClassName || "text-foreground font-medium"}`}>{value}</span>
+      <span className="text-foreground font-medium text-right truncate">{value}</span>
     </div>
   );
 }

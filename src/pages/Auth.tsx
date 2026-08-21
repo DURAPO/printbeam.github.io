@@ -86,7 +86,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
             <>
               <CardHeader className="text-center">
                 <CardTitle className="text-base"><span className="text-success">⟩</span> sign in</CardTitle>
-                <CardDescription className="text-xs">Enter your email to continue</CardDescription>
+                <CardDescription className="text-xs">Enter your team email to continue</CardDescription>
               </CardHeader>
               <form onSubmit={handleEmailSubmit}>
                 <CardContent>

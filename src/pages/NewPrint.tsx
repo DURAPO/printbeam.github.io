@@ -18,12 +18,11 @@ import {
   X,
   Calendar,
   Clock,
-  CreditCard,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import type { Id } from "@/convex/_generated/dataModel";
 
-type Step = "store" | "details" | "schedule" | "checkout" | "confirm";
+type Step = "store" | "details" | "schedule" | "confirm";
 
 interface PrintDetails {
   fileName: string;
@@ -76,7 +75,6 @@ export default function NewPrint() {
     notes: "",
   });
   const [scheduledSlot, setScheduledSlot] = useState<string | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"team-balance" | "card">("team-balance");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -147,7 +145,6 @@ export default function NewPrint() {
     setSelectedStoreName("");
     setDetails({ fileName: "", fileSize: 0, copies: 1, color: false, paperSize: "Letter (8.5×11)", doubleSided: false, notes: "" });
     setScheduledSlot(null);
-    setPaymentMethod("team-balance");
   };
 
   if (submitted) {
@@ -163,8 +160,7 @@ export default function NewPrint() {
               Your job at <span className="text-foreground font-medium">{selectedStoreName}</span> is now in the queue.
             </p>
             <p className="text-xs text-muted-foreground/70 mb-8">
-              Status updates will appear on your dashboard. Estimated cost:{" "}
-              <span className="text-foreground font-medium">{formatCurrency(estimatedAmount)}</span>
+              Estimated cost: <span className="text-foreground font-medium">{formatCurrency(estimatedAmount)}</span>
             </p>
             <div className="flex gap-3 justify-center">
               <Button variant="outline" onClick={() => navigate("/dashboard")} className="text-xs">View dashboard</Button>
@@ -176,7 +172,7 @@ export default function NewPrint() {
     );
   }
 
-  const stepIndex = ["store", "details", "schedule", "checkout", "confirm"].indexOf(step);
+  const stepIndex = ["store", "details", "schedule", "confirm"].indexOf(step);
 
   return (
     <main className="min-h-screen bg-background font-mono">
@@ -192,10 +188,10 @@ export default function NewPrint() {
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            {["store", "details", "schedule", "checkout", "confirm"].map((s, i) => (
+            {["store", "details", "schedule", "confirm"].map((s, i) => (
               <div key={s} className="flex items-center gap-1">
                 <div className={`size-2 rounded-full transition-colors ${i <= stepIndex ? "bg-success" : "bg-border"}`} />
-                {i < 4 && <div className="w-3 h-px bg-border" />}
+                {i < 3 && <div className="w-3 h-px bg-border" />}
               </div>
             ))}
           </div>
@@ -203,6 +199,7 @@ export default function NewPrint() {
       </div>
 
       <div className="mx-auto max-w-2xl px-6 py-8">
+        {/* Step 1: Store */}
         {step === "store" && (
           <motion.div key="store" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
             <p className="text-[11px] text-success font-medium mb-1 tracking-wide">// step 01 · select pressroom</p>
@@ -237,6 +234,7 @@ export default function NewPrint() {
           </motion.div>
         )}
 
+        {/* Step 2: Details */}
         {step === "details" && (
           <motion.div key="details" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
             <button onClick={() => setStep("store")} className="text-xs text-muted-foreground hover:text-foreground transition-colors mb-4 flex items-center gap-1">
@@ -317,6 +315,7 @@ export default function NewPrint() {
           </motion.div>
         )}
 
+        {/* Step 3: Schedule */}
         {step === "schedule" && (
           <motion.div key="schedule" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
             <button onClick={() => setStep("details")} className="text-xs text-muted-foreground hover:text-foreground transition-colors mb-4 flex items-center gap-1">
@@ -335,57 +334,18 @@ export default function NewPrint() {
             </div>
             <div className="mt-6 flex gap-3">
               <Button variant="outline" onClick={() => setStep("details")} className="text-xs"><ArrowLeft className="size-3" /> Back</Button>
-              <Button onClick={() => setStep("checkout")} disabled={!scheduledSlot} className="flex-1 text-xs bg-success hover:bg-success/90 text-white">Continue to checkout <ArrowRight className="size-3" /></Button>
+              <Button onClick={() => setStep("confirm")} disabled={!scheduledSlot} className="flex-1 text-xs bg-success hover:bg-success/90 text-white">Review order <ArrowRight className="size-3" /></Button>
             </div>
           </motion.div>
         )}
 
-        {step === "checkout" && (
-          <motion.div key="checkout" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+        {/* Step 4: Confirm */}
+        {step === "confirm" && (
+          <motion.div key="confirm" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
             <button onClick={() => setStep("schedule")} className="text-xs text-muted-foreground hover:text-foreground transition-colors mb-4 flex items-center gap-1">
               <ArrowLeft className="size-3" /> back to scheduling
             </button>
-            <p className="text-[11px] text-success font-medium mb-1 tracking-wide">// step 04 · payment</p>
-            <h2 className="text-lg font-bold mb-1">Checkout</h2>
-            <p className="text-xs text-muted-foreground mb-6">Review the cost and select a payment method.</p>
-            <Card className="border-border mb-6">
-              <CardContent className="p-4 space-y-3">
-                <Row label="File" value={details.fileName} />
-                <Row label="Copies" value={`${details.copies}×`} />
-                <Row label="Mode" value={`${details.color ? "Color" : "B&W"} · ${details.doubleSided ? "Duplex" : "Simplex"}`} />
-                <Row label="Paper" value={details.paperSize} />
-                <Row label="Pickup" value={scheduledSlot || "ASAP"} />
-                <div className="border-t border-border pt-3 flex items-baseline justify-between">
-                  <span className="text-xs text-muted-foreground">Estimated total</span>
-                  <span className="text-lg font-bold text-success">{formatCurrency(estimatedAmount)}</span>
-                </div>
-              </CardContent>
-            </Card>
-            <p className="text-xs font-medium mb-3">Payment method</p>
-            <div className="space-y-2 mb-6">
-              {([["team-balance", "Team balance", null] as const, ["card", "Credit card", CreditCard] as const]).map(([key, label, Icon]) => (
-                <button key={key} onClick={() => setPaymentMethod(key)} className={`w-full text-left rounded-lg border p-3 text-xs font-medium transition-all flex items-center gap-3 ${paymentMethod === key ? "border-success bg-success/10 text-success" : "border-border bg-card text-foreground hover:border-success/30"}`}>
-                  <div className="size-4 rounded-full border-2 border-current flex items-center justify-center">
-                    {paymentMethod === key && <div className="size-2 rounded-full bg-current" />}
-                  </div>
-                  {Icon && <Icon className="size-4" />}
-                  {label}
-                </button>
-              ))}
-            </div>
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={() => setStep("schedule")} className="text-xs"><ArrowLeft className="size-3" /> Back</Button>
-              <Button onClick={() => setStep("confirm")} className="flex-1 text-xs bg-success hover:bg-success/90 text-white">Review order <ArrowRight className="size-3" /></Button>
-            </div>
-          </motion.div>
-        )}
-
-        {step === "confirm" && (
-          <motion.div key="confirm" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <button onClick={() => setStep("checkout")} className="text-xs text-muted-foreground hover:text-foreground transition-colors mb-4 flex items-center gap-1">
-              <ArrowLeft className="size-3" /> back to checkout
-            </button>
-            <p className="text-[11px] text-success font-medium mb-1 tracking-wide">// step 05 · review & submit</p>
+            <p className="text-[11px] text-success font-medium mb-1 tracking-wide">// step 04 · review & submit</p>
             <h2 className="text-lg font-bold mb-1">Confirm your order</h2>
             <p className="text-xs text-muted-foreground mb-6">Everything look good? Submit to queue your print job.</p>
             <Card className="border-border">
@@ -399,16 +359,15 @@ export default function NewPrint() {
                 <Row label="Paper" value={details.paperSize} />
                 <Row label="Double-sided" value={details.doubleSided ? "Yes" : "No"} />
                 <Row label="Pickup" value={scheduledSlot || "ASAP"} />
-                <Row label="Payment" value={paymentMethod === "team-balance" ? "Team balance" : "Credit card"} />
                 {details.notes && <Row label="Notes" value={details.notes} />}
                 <div className="border-t border-border pt-3 mt-3 flex items-baseline justify-between">
-                  <span className="text-xs text-muted-foreground">Total</span>
+                  <span className="text-xs text-muted-foreground">Estimated total</span>
                   <span className="text-base font-bold text-success">{formatCurrency(estimatedAmount)}</span>
                 </div>
               </CardContent>
             </Card>
             <div className="mt-6 flex gap-3">
-              <Button variant="outline" onClick={() => setStep("checkout")} className="text-xs"><ArrowLeft className="size-3" /> Back</Button>
+              <Button variant="outline" onClick={() => setStep("schedule")} className="text-xs"><ArrowLeft className="size-3" /> Back</Button>
               <Button onClick={handleSubmit} disabled={isSubmitting} className="flex-1 text-xs bg-success hover:bg-success/90 text-white">
                 {isSubmitting ? <><Loader2 className="size-3 animate-spin" /> Submitting…</> : <><Zap className="size-3" /> Submit print job</>}
               </Button>
