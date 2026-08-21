@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Zap, Shield, Clock, ArrowRight, Layers } from "lucide-react";
+import { Zap, Shield, Clock, ArrowRight, Layers, Store, Printer } from "lucide-react";
 import { useNavigate } from "react-router";
 
 const fadeUp = {
@@ -51,20 +51,20 @@ export default function Landing() {
           <motion.div initial="hidden" animate="visible" className="max-w-2xl">
             <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 rounded-full border border-success/20 bg-success/5 px-3 py-1 text-[11px] text-success mb-6 font-medium tracking-wide">
               <span className="size-1.5 rounded-full bg-success" />
-              Internal print infrastructure
+              Global print infrastructure
             </motion.div>
             <motion.h1 variants={fadeUp} custom={1} className="text-3xl md:text-5xl font-bold tracking-tight leading-[1.15]">
               Print anything.<br />In under a minute.
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="mt-5 text-muted-foreground text-sm md:text-base leading-relaxed max-w-lg">
-              PrintBeam lets your team submit print jobs to any connected pressroom — pick a location, upload your file, schedule a time, and check out. No friction, no delays.
+              PrintBeam connects customers with print stores worldwide. Upload a file, pick a nearby store, and have it printed in under a minute. For store owners, it takes just a few minutes to register and start accepting orders.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
               <button onClick={() => navigate("/auth")} className="inline-flex items-center gap-2 rounded-md bg-success text-white px-5 py-2.5 text-sm font-medium hover:bg-success/90 transition-colors">
                 Start printing <ArrowRight className="size-4" />
               </button>
-              <button onClick={() => document.getElementById("capabilities")?.scrollIntoView({ behavior: "smooth" })} className="inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm font-medium hover:bg-muted transition-colors">
-                See how it works
+              <button onClick={() => navigate("/store-onboarding")} className="inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm font-medium hover:bg-muted transition-colors">
+                <Store className="size-4" /> Register your store
               </button>
             </motion.div>
           </motion.div>
@@ -100,7 +100,7 @@ export default function Landing() {
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-10">
             <p className="text-[11px] text-success font-medium mb-2 tracking-wide">// capabilities</p>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Built for internal workflows.</h2>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Built for speed and reliability.</h2>
           </motion.div>
           <div className="grid gap-6 sm:grid-cols-2">
             {capabilities.map((cap, i) => (
@@ -120,22 +120,50 @@ export default function Landing() {
       <section className="border-b border-border/60">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-10">
-            <p className="text-[11px] text-success font-medium mb-2 tracking-wide">// workflow</p>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Four steps. Done.</h2>
+            <p className="text-[11px] text-success font-medium mb-2 tracking-wide">// how it works</p>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Two flows. Both simple.</h2>
           </motion.div>
-          <div className="grid gap-4 md:grid-cols-4">
-            {[
-              { step: "01", label: "Pick a pressroom", code: "printbeam pick" },
-              { step: "02", label: "Upload your file", code: "printbeam upload" },
-              { step: "03", label: "Schedule pickup", code: "printbeam book" },
-              { step: "04", label: "Confirm & submit", code: "printbeam send" },
-            ].map((item, i) => (
-              <motion.div key={item.step} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-lg border border-border bg-card p-4">
-                <span className="text-[10px] text-success font-medium tracking-wider">{item.step}</span>
-                <h3 className="text-sm font-semibold mt-1.5 mb-2">{item.label}</h3>
-                <code className="block text-[11px] text-muted-foreground/70 bg-surface rounded px-2 py-1 font-mono">$ {item.code}</code>
-              </motion.div>
-            ))}
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Customer flow */}
+            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="rounded-lg border border-border bg-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="size-8 rounded-md bg-success/10 flex items-center justify-center text-success border border-success/20"><Zap className="size-4" /></div>
+                <h3 className="text-sm font-semibold">For customers</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { step: "01", label: "Upload your PDF" },
+                  { step: "02", label: "Pick a nearby store" },
+                  { step: "03", label: "Choose print options" },
+                  { step: "04", label: "Confirm & track" },
+                ].map((item) => (
+                  <div key={item.step} className="flex items-center gap-3">
+                    <span className="text-[10px] text-success font-medium tracking-wider w-6">{item.step}</span>
+                    <span className="text-xs text-muted-foreground">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+            {/* Store owner flow */}
+            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="rounded-lg border border-border bg-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="size-8 rounded-md bg-success/10 flex items-center justify-center text-success border border-success/20"><Printer className="size-4" /></div>
+                <h3 className="text-sm font-semibold">For store owners</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { step: "01", label: "Register your store" },
+                  { step: "02", label: "Set your printing rates" },
+                  { step: "03", label: "Connect your printers" },
+                  { step: "04", label: "Accept & fulfill orders" },
+                ].map((item) => (
+                  <div key={item.step} className="flex items-center gap-3">
+                    <span className="text-[10px] text-success font-medium tracking-wider w-6">{item.step}</span>
+                    <span className="text-xs text-muted-foreground">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -145,10 +173,15 @@ export default function Landing() {
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24 text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Ready to print?</h2>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">Sign in with your team credentials and submit your first job in under sixty seconds.</p>
-            <button onClick={() => navigate("/auth")} className="inline-flex items-center gap-2 rounded-md bg-success text-white px-6 py-2.5 text-sm font-medium hover:bg-success/90 transition-colors">
-              Open PrintBeam <ArrowRight className="size-4" />
-            </button>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">Sign in to submit your first print job, or register your store to start accepting orders.</p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <button onClick={() => navigate("/auth")} className="inline-flex items-center gap-2 rounded-md bg-success text-white px-6 py-2.5 text-sm font-medium hover:bg-success/90 transition-colors">
+                Start printing <ArrowRight className="size-4" />
+              </button>
+              <button onClick={() => navigate("/store-onboarding")} className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-2.5 text-sm font-medium hover:bg-muted transition-colors">
+                <Store className="size-4" /> Register your store
+              </button>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -159,7 +192,7 @@ export default function Landing() {
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Zap className="size-3 text-success" /><span className="font-semibold">PrintBeam</span><span className="text-border">·</span><span>v1.0.0</span>
           </div>
-          <p className="text-[11px] text-muted-foreground/60">© {new Date().getFullYear()} PrintBeam. Internal use only.</p>
+          <p className="text-[11px] text-muted-foreground/60">© {new Date().getFullYear()} PrintBeam.</p>
         </div>
       </footer>
     </div>
