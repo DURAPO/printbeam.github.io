@@ -1,35 +1,79 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
+/** List print orders for the current user (customer dashboard). */
 export const listByUser = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
 
-    const jobs = await ctx.db
-      .query("printJobs")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+    const orders = await ctx.db
+      .query("orders")
+      .withIndex("by_customer", (q) => q.eq("customerId", identity.subject))
       .order("desc")
       .take(50);
 
-    return jobs;
+    // Enrich with store names
+    return Promise.all(
+      orders.map(async (order) => {
+        const store = await ctx.db.get(order.storeId);
+        return {
+          ...order,
+          storeName: store?.name ?? "Unknown",
+        };
+      }),
+    );
   },
 });
 
+/** Get a single order (customer or store owner access). */
 export const get = query({
-  args: { jobId: v.id("printJobs") },
+  args: { orderId: v.id("orders") },
   handler: async (ctx, args) => {
-    const job = await ctx.db.get(args.jobId);
-    if (!job) return null;
+    const order = await ctx.db.get(args.orderId);
+    if (!order) return null;
 
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity || job.userId !== identity.subject) return null;
+    if (!identity) return null;
 
-    return job;
+    if (order.customerId === identity.subject) {
+      const store = await ctx.db.get(order.storeId);
+      return { ...order, storeName: store?.name ?? "Unknown", access: "customer" as const };
+    }
+
+    const store = await ctx.db.get(order.storeId);
+    if (store && store.ownerId === identity.subject) {
+      return { ...order, storeName: store.name, access: "store" as const };
+    }
+
+    return null;
   },
 });
 
+/** Stats for the customer dashboard. */
+export const stats = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return { total: 0, active: 0, completed: 0 };
+
+    const orders = await ctx.db
+      .query("orders")
+      .withIndex("by_customer", (q) => q.eq("customerId", identity.subject))
+      .collect();
+
+    return {
+      total: orders.length,
+      active: orders.filter(
+        (o) => o.status === "pending" || o.status === "accepted" || o.status === "printing" || o.status === "retrying",
+      ).length,
+      completed: orders.filter((o) => o.status === "done").length,
+    };
+  },
+});
+
+// Legacy create/cancel stubs kept for import compatibility — all real mutations go through orders.ts
 export const create = mutation({
   args: {
     storeId: v.id("stores"),
@@ -42,60 +86,14 @@ export const create = mutation({
     doubleSided: v.boolean(),
     notes: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
-    const jobId = await ctx.db.insert("printJobs", {
-      userId: identity.subject,
-      storeId: args.storeId,
-      storeName: args.storeName,
-      fileName: args.fileName,
-      fileSize: args.fileSize,
-      copies: args.copies,
-      color: args.color,
-      paperSize: args.paperSize,
-      doubleSided: args.doubleSided,
-      notes: args.notes,
-      status: "pending",
-      createdAt: Date.now(),
-    });
-
-    return jobId;
+  handler: async () => {
+    throw new Error("Use orders.create instead");
   },
 });
 
 export const cancel = mutation({
-  args: { jobId: v.id("printJobs") },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
-    const job = await ctx.db.get(args.jobId);
-    if (!job) throw new Error("Print job not found");
-    if (job.userId !== identity.subject) throw new Error("Not authorized");
-
-    await ctx.db.patch(args.jobId, { status: "cancelled" });
-  },
-});
-
-export const stats = query({
-  args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) return { total: 0, pending: 0, completed: 0 };
-
-    const jobs = await ctx.db
-      .query("printJobs")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .collect();
-
-    return {
-      total: jobs.length,
-      pending: jobs.filter(
-        (j) => j.status === "pending" || j.status === "processing",
-      ).length,
-      completed: jobs.filter((j) => j.status === "completed").length,
-    };
+  args: { jobId: v.id("orders") },
+  handler: async () => {
+    throw new Error("Use orders.reject instead");
   },
 });

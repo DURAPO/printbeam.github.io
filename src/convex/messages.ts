@@ -2,13 +2,13 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
-export const listByJob = query({
-  args: { printJobId: v.id("printJobs") },
+export const listByOrder = query({
+  args: { orderId: v.id("orders") },
   handler: async (ctx, args) => {
     return await ctx.db
       .query("messages")
-      .withIndex("by_job_created", (q) =>
-        q.eq("printJobId", args.printJobId),
+      .withIndex("by_order_created", (q) =>
+        q.eq("orderId", args.orderId),
       )
       .order("asc")
       .collect();
@@ -17,7 +17,7 @@ export const listByJob = query({
 
 export const send = mutation({
   args: {
-    printJobId: v.id("printJobs"),
+    orderId: v.id("orders"),
     content: v.string(),
   },
   handler: async (ctx, args) => {
@@ -29,7 +29,7 @@ export const send = mutation({
     const userName = user?.name || identity.name || "Team member";
 
     return await ctx.db.insert("messages", {
-      printJobId: args.printJobId,
+      orderId: args.orderId,
       userId: identity.subject,
       userName,
       content: args.content,
