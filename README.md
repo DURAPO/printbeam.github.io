@@ -229,5 +229,5 @@ Live: https://printbeam.freebuff.app/
 
 ---
 
-Built with ❤️ for D U R A  
+Built with D U R A  
 This project stands with INDIAN 🇮🇳
