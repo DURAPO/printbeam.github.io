@@ -230,4 +230,4 @@ Live: https://printbeam.freebuff.app/
 ---
 
 Built with ❤️ for D U R A  
-faster, smarter local printing.
+This project stands with INDIAN 🇮🇳
