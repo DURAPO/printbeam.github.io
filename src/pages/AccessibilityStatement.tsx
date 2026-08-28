@@ -34,7 +34,7 @@ export default function AccessibilityStatement() {
       </Section>
 
       <Section title="6. Feedback">
-        <p>We welcome your feedback on the accessibility of PrintBeam. If you encounter accessibility barriers or have suggestions for improvement, please contact us through the Support page or email accessibility@printbeam.com. We take all accessibility feedback seriously and aim to respond within 5 business days.</p>
+        <p>We welcome your feedback on the accessibility of PrintBeam. If you encounter accessibility barriers or have suggestions for improvement, please contact us through the Support page or email us at durapomain@gmail.com. We take all accessibility feedback seriously and aim to respond within 5 business days.</p>
       </Section>
 
       <Section title="7. Enforcement">

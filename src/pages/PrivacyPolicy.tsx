@@ -64,7 +64,7 @@ export default function PrivacyPolicy() {
       </Section>
 
       <Section title="11. Contact Us">
-        <p>Questions about this Privacy Policy? Contact us through the Support page or email privacy@printbeam.com.</p>
+        <p>Questions about this Privacy Policy? Contact us through the Support page or email us at durapomain@gmail.com.</p>
       </Section>
     </LegalPage>
   );

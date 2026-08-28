@@ -38,14 +38,14 @@ export default function SecurityPolicy() {
 
       <Section title="6. Vulnerability Reporting">
         <p>We welcome responsible disclosure of security vulnerabilities. If you discover a security issue:</p>
-        <p>• <strong>Do:</strong> Report the issue privately to security@printbeam.com with detailed reproduction steps.</p>
+        <p>• <strong>Do:</strong> Report the issue privately to durapomain@gmail.com with detailed reproduction steps.</p>
         <p>• <strong>Do:</strong> Allow reasonable time for us to address the issue before public disclosure.</p>
         <p>• <strong>Don't:</strong> Access, modify, or delete data belonging to other users.</p>
         <p>• <strong>Don't:</strong> Perform testing that could disrupt the service or affect other users.</p>
       </Section>
 
       <Section title="7. Bug Bounty">
-        <p>We recognize and appreciate security researchers who help us improve our platform. Valid reports may be eligible for recognition. Contact security@printbeam.com for details.</p>
+        <p>We recognize and appreciate security researchers who help us improve our platform. Valid reports may be eligible for recognition. Contact durapomain@gmail.com for details.</p>
       </Section>
 
       <Section title="8. Incident Response">
@@ -56,8 +56,8 @@ export default function SecurityPolicy() {
       </Section>
 
       <Section title="9. Contact">
-        <p>Security reports: security@printbeam.com</p>
-        <p>General inquiries: support@printbeam.com</p>
+        <p>Security reports: durapomain@gmail.com</p>
+        <p>General inquiries: durapomain@gmail.com</p>
       </Section>
     </LegalPage>
   );

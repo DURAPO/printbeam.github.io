@@ -67,7 +67,7 @@ export default function TermsOfService() {
       </Section>
 
       <Section title="13. Contact">
-        <p>Questions about these Terms? Contact us through the Support page or email legal@printbeam.com.</p>
+        <p>Questions about these Terms? Contact us through the Support page or email us at durapomain@gmail.com.</p>
       </Section>
     </LegalPage>
   );

@@ -57,7 +57,7 @@ export default function CommunityGuidelines() {
       </Section>
 
       <Section title="10. Contact">
-        <p>Questions about these guidelines? Contact us through the Support page or email community@printbeam.com.</p>
+        <p>Questions about these guidelines? Contact us through the Support page or email durapomain@gmail.com.</p>
       </Section>
     </LegalPage>
   );

@@ -42,7 +42,7 @@ export default function RefundPolicy() {
       </Section>
 
       <Section title="9. Contact">
-        <p>Need help with a refund? Contact us through the Support page or email support@printbeam.com.</p>
+        <p>Need help with a refund? Contact us through the Support page or email us at durapomain@gmail.com.</p>
       </Section>
     </LegalPage>
   );

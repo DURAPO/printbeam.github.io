@@ -27,7 +27,7 @@ export default function Maintenance() {
             </div>
           </div>
           <p className="text-[10px] text-muted-foreground/70">
-            For urgent matters, contact support@printbeam.com
+            For urgent matters, contact durapomain@gmail.com
           </p>
         </div>
       </div>

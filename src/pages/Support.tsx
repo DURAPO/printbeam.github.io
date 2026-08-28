@@ -93,17 +93,17 @@ export default function Support() {
             </div>
           </button>
           <button
-            onClick={() => window.location.href = "mailto:support@printbeam.com"}
+            onClick={() => window.location.href = "mailto:durapomain@gmail.com"}
             className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 hover:bg-muted/50 transition-colors text-left"
           >
             <Mail className="size-4 text-success shrink-0" />
             <div>
               <p className="text-xs font-medium">Email</p>
-              <p className="text-[10px] text-muted-foreground">support@printbeam.com</p>
+              <p className="text-[10px] text-muted-foreground">durapomain@gmail.com</p>
             </div>
           </button>
           <button
-            onClick={() => window.location.href = "mailto:security@printbeam.com"}
+            onClick={() => window.location.href = "mailto:durapomain@gmail.com"}
             className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 hover:bg-muted/50 transition-colors text-left"
           >
             <MessageSquare className="size-4 text-success shrink-0" />
@@ -132,7 +132,7 @@ export default function Support() {
             Our team typically responds within 24 hours on business days.
           </p>
           <button
-            onClick={() => window.location.href = "mailto:support@printbeam.com?subject=PrintBeam Support Request"}
+            onClick={() => window.location.href = "mailto:durapomain@gmail.com?subject=PrintBeam Support Request"}
             className="inline-flex items-center gap-2 rounded-md bg-success text-white px-5 py-2 text-xs font-medium hover:bg-success/90 transition-colors"
           >
             <Mail className="size-3.5" /> Contact support
