@@ -40,6 +40,8 @@ const ServerError = lazy(() => import("./pages/ServerError.tsx"));
 const MaintenancePage = lazy(() => import("./pages/Maintenance.tsx"));
 const OfflinePage = lazy(() => import("./pages/OfflinePage.tsx"));
 const SessionExpired = lazy(() => import("./pages/SessionExpired.tsx"));
+// D1 Integration
+const D1Dashboard = lazy(() => import("./pages/D1Dashboard.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
@@ -212,6 +214,15 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/maintenance" element={<MaintenancePage />} />
               <Route path="/offline" element={<OfflinePage />} />
               <Route path="/session-expired" element={<SessionExpired />} />
+              {/* D1 Integration */}
+              <Route
+                path="/d1"
+                element={
+                  <RequireAuth>
+                    <D1Dashboard />
+                  </RequireAuth>
+                }
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
