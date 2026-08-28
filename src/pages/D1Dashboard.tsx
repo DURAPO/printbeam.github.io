@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   FileText,
   Zap,
+  Database,
 } from "lucide-react";
 
 type Tab = "logs" | "analytics" | "metrics" | "query";
@@ -35,6 +36,9 @@ export default function D1Dashboard() {
             </span>
           </div>
         </div>
+
+        {/* Database Setup Banner */}
+        <MigrationPanel />
 
         {/* Tab Navigation */}
         <div className="mb-6 flex gap-1 rounded-lg border border-border p-1">
@@ -67,6 +71,53 @@ export default function D1Dashboard() {
         {activeTab === "query" && <RawQueryPanel />}
       </div>
     </AppShell>
+  );
+}
+
+// ─── Migration Panel ────────────────────────────────────
+
+function MigrationPanel() {
+  const runMigration = useAction(api.d1.runMigration);
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleMigrate = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await runMigration();
+      setDone(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Migration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (done) {
+    return (
+      <div className="mb-4 flex items-center gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
+        <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
+        <span className="text-xs text-emerald-400">Database initialized — 3 tables created (audit_logs, analytics_events, store_metrics)</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-4 flex items-center gap-3 rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3">
+      <Database className="size-4 text-amber-400 shrink-0" />
+      <span className="text-xs text-muted-foreground flex-1">Database tables not yet initialized. Run the migration to create them.</span>
+      <button
+        onClick={handleMigrate}
+        disabled={loading}
+        className="flex items-center gap-1.5 rounded-md bg-[var(--ring)] px-3 py-1.5 text-[11px] font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
+      >
+        {loading ? <Loader2 className="size-3 animate-spin" /> : <Database className="size-3" />}
+        Initialize
+      </button>
+      {error && <span className="text-[11px] text-red-400">{error}</span>}
+    </div>
   );
 }
 
