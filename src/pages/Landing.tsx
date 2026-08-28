@@ -188,11 +188,49 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="border-t border-border/60 bg-surface/50">
-        <div className="mx-auto max-w-5xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Zap className="size-3 text-success" /><span className="font-semibold">PrintBeam</span><span className="text-border">·</span><span>v1.0.0</span>
+        <div className="mx-auto max-w-5xl px-6 py-10">
+          <div className="grid gap-8 sm:grid-cols-4 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Zap className="size-3 text-success" /><span className="text-xs font-bold">PrintBeam</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground leading-relaxed">Print anything. In under a minute.</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-foreground mb-2 tracking-wide uppercase">Product</p>
+              <div className="space-y-1.5">
+                <button onClick={() => navigate("/auth")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Start printing</button>
+                <button onClick={() => navigate("/store-onboarding")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Register your store</button>
+                <button onClick={() => navigate("/support")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Support</button>
+              </div>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-foreground mb-2 tracking-wide uppercase">Legal</p>
+              <div className="space-y-1.5">
+                <button onClick={() => navigate("/privacy-policy")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</button>
+                <button onClick={() => navigate("/terms-of-service")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Terms of Service</button>
+                <button onClick={() => navigate("/cookie-policy")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Cookie Policy</button>
+                <button onClick={() => navigate("/refund-policy")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Refund Policy</button>
+              </div>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-foreground mb-2 tracking-wide uppercase">Company</p>
+              <div className="space-y-1.5">
+                <button onClick={() => navigate("/accessibility")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Accessibility</button>
+                <button onClick={() => navigate("/security")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Security</button>
+                <button onClick={() => navigate("/acceptable-use")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Acceptable Use</button>
+                <button onClick={() => navigate("/community-guidelines")} className="block text-[10px] text-muted-foreground hover:text-foreground transition-colors">Community Guidelines</button>
+              </div>
+            </div>
           </div>
-          <p className="text-[11px] text-muted-foreground/60">© {new Date().getFullYear()} PrintBeam.</p>
+          <div className="border-t border-border/60 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p className="text-[10px] text-muted-foreground/60">© {new Date().getFullYear()} PrintBeam. All rights reserved.</p>
+            <div className="flex gap-4">
+              <button onClick={() => navigate("/privacy-policy")} className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors">Privacy</button>
+              <button onClick={() => navigate("/terms-of-service")} className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors">Terms</button>
+              <button onClick={() => navigate("/cookie-policy")} className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors">Cookies</button>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

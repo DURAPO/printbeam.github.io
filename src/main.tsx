@@ -18,6 +18,27 @@ const PrintJobDetail = lazy(() => import("./pages/PrintJobDetail.tsx"));
 const StoreOnboarding = lazy(() => import("./pages/StoreOnboarding.tsx"));
 const StoreDashboard = lazy(() => import("./pages/StoreDashboard.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+// Auth & Account
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword.tsx"));
+const EmailVerification = lazy(() => import("./pages/EmailVerification.tsx"));
+const AccountSettings = lazy(() => import("./pages/AccountSettings.tsx"));
+// Legal & Compliance
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy.tsx"));
+const RefundPolicy = lazy(() => import("./pages/RefundPolicy.tsx"));
+const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement.tsx"));
+const AcceptableUsePolicy = lazy(() => import("./pages/AcceptableUsePolicy.tsx"));
+const SecurityPolicy = lazy(() => import("./pages/SecurityPolicy.tsx"));
+const CommunityGuidelines = lazy(() => import("./pages/CommunityGuidelines.tsx"));
+// Support
+const Support = lazy(() => import("./pages/Support.tsx"));
+// System States
+const Forbidden = lazy(() => import("./pages/Forbidden.tsx"));
+const ServerError = lazy(() => import("./pages/ServerError.tsx"));
+const MaintenancePage = lazy(() => import("./pages/Maintenance.tsx"));
+const OfflinePage = lazy(() => import("./pages/OfflinePage.tsx"));
+const SessionExpired = lazy(() => import("./pages/SessionExpired.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
@@ -168,6 +189,27 @@ createRoot(document.getElementById("root")!).render(
                   </RequireAuth>
                 }
               />
+              {/* Auth & Account */}
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/email-verification" element={<EmailVerification />} />
+              <Route path="/account" element={<RequireAuth><AccountSettings /></RequireAuth>} />
+              {/* Support */}
+              <Route path="/support" element={<Support />} />
+              {/* Legal & Compliance */}
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/refund-policy" element={<RefundPolicy />} />
+              <Route path="/accessibility" element={<AccessibilityStatement />} />
+              <Route path="/acceptable-use" element={<AcceptableUsePolicy />} />
+              <Route path="/security" element={<SecurityPolicy />} />
+              <Route path="/community-guidelines" element={<CommunityGuidelines />} />
+              {/* System States */}
+              <Route path="/403" element={<Forbidden />} />
+              <Route path="/500" element={<ServerError />} />
+              <Route path="/maintenance" element={<MaintenancePage />} />
+              <Route path="/offline" element={<OfflinePage />} />
+              <Route path="/session-expired" element={<SessionExpired />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

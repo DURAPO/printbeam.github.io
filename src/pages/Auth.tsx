@@ -100,6 +100,11 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     </Button>
                   </div>
                   {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
+                  <div className="mt-3 flex justify-end">
+                    <Button type="button" variant="link" className="p-0 h-auto text-[10px] text-muted-foreground" onClick={() => navigate("/forgot-password")}>
+                      forgot password?
+                    </Button>
+                  </div>
                   <div className="mt-5">
                     <div className="relative"><div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div><div className="relative flex justify-center text-[10px] uppercase"><span className="bg-card px-2 text-muted-foreground tracking-wider">or</span></div></div>
                     <Button type="button" variant="outline" className="w-full mt-4 text-xs" onClick={handleGuestLogin} disabled={isLoading}>
