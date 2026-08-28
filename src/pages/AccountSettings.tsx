@@ -70,7 +70,7 @@ export default function AccountSettings() {
                   </div>
                   <div>
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Email</label>
-                    <Input type="email" defaultValue="" placeholder="you@team.com" className="text-xs font-mono" disabled />
+                    <Input type="email" defaultValue="" placeholder="you@gmail.com" className="text-xs font-mono" disabled />
                     <p className="text-[10px] text-muted-foreground mt-1">Email cannot be changed here</p>
                   </div>
                   <div>

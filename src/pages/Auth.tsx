@@ -74,14 +74,14 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
             <>
               <CardHeader className="text-center">
                 <CardTitle className="text-base"><span className="text-success">⟩</span> sign in</CardTitle>
-                <CardDescription className="text-xs">Enter your team email to continue</CardDescription>
+                <CardDescription className="text-xs">Enter your email to continue</CardDescription>
               </CardHeader>
               <form onSubmit={handleEmailSubmit}>
                 <CardContent>
                   <div className="relative flex items-center gap-2">
                     <div className="relative flex-1">
                       <Mail className="absolute left-3 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-                      <Input name="email" placeholder="you@team.com" type="email" className="pl-9 text-xs font-mono" disabled={isLoading} required />
+                      <Input name="email" placeholder="you@gmail.com" type="email" className="pl-9 text-xs font-mono" disabled={isLoading} required />
                     </div>
                     <Button type="submit" size="icon" disabled={isLoading} className="bg-success hover:bg-success/90 text-white shrink-0">
                       {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowRight className="h-3.5 w-3.5" />}
