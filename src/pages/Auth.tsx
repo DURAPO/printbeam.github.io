@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useAuth } from "@/hooks/use-auth";
-import { ArrowRight, Loader2, Mail, UserX, Zap } from "lucide-react";
+import { ArrowRight, Loader2, Mail, Zap } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
@@ -58,18 +58,6 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
     }
   };
 
-  const handleGuestLogin = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await signIn("anonymous");
-      navigate(redirect);
-    } catch (error) {
-      setError(`Failed to sign in as guest: ${error instanceof Error ? error.message : "Unknown error"}`);
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-background font-mono">
       <nav className="border-b border-border/60 bg-card/80 backdrop-blur-sm">
@@ -105,12 +93,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       forgot password?
                     </Button>
                   </div>
-                  <div className="mt-5">
-                    <div className="relative"><div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div><div className="relative flex justify-center text-[10px] uppercase"><span className="bg-card px-2 text-muted-foreground tracking-wider">or</span></div></div>
-                    <Button type="button" variant="outline" className="w-full mt-4 text-xs" onClick={handleGuestLogin} disabled={isLoading}>
-                      <UserX className="mr-2 h-3.5 w-3.5" /> continue as guest
-                    </Button>
-                  </div>
+
                 </CardContent>
               </form>
             </>
