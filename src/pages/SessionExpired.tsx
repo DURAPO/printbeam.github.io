@@ -28,7 +28,7 @@ export default function SessionExpired() {
           <p className="text-sm text-muted-foreground mb-6">
             Your session has ended due to inactivity. Please sign in again to continue where you left off.
           </p>
-          <Button onClick={handleSignIn} className="text-xs bg-success hover:bg-success/90 text-white gap-1.5">
+          <Button onClick={handleSignIn} className="text-xs bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white gap-1.5">
             Sign in <ArrowRight className="size-3" />
           </Button>
         </div>

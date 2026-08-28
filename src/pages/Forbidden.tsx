@@ -26,7 +26,7 @@ export default function Forbidden() {
             <Button variant="outline" onClick={() => navigate("/")} className="text-xs gap-1.5">
               <ArrowLeft className="size-3" /> Go home
             </Button>
-            <Button onClick={() => navigate("/auth")} className="text-xs bg-success hover:bg-success/90 text-white">
+            <Button onClick={() => navigate("/auth")} className="text-xs bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white">
               Sign in
             </Button>
           </div>

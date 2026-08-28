@@ -74,7 +74,7 @@ export default function ForgotPassword() {
                       type="submit"
                       size="icon"
                       disabled={isLoading || !email}
-                      className="bg-success hover:bg-success/90 text-white shrink-0"
+                      className="bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white shrink-0"
                     >
                       {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowRight className="h-3.5 w-3.5" />}
                     </Button>

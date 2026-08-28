@@ -133,7 +133,7 @@ export default function Support() {
           </p>
           <button
             onClick={() => window.location.href = "mailto:durapomain@gmail.com?subject=PrintBeam Support Request"}
-            className="inline-flex items-center gap-2 rounded-md bg-success text-white px-5 py-2 text-xs font-medium hover:bg-success/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-[var(--ring)] text-white px-5 py-2 text-xs font-medium hover:bg-[var(--ring)]/90 transition-colors"
           >
             <Mail className="size-3.5" /> Contact support
           </button>

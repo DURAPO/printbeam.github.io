@@ -48,7 +48,7 @@ export default function OfflinePage() {
               <p className="pl-3">▸ action: <span className="text-foreground">waiting for reconnection</span></p>
             </div>
           </div>
-          <Button onClick={() => window.location.reload()} className="text-xs bg-success hover:bg-success/90 text-white gap-1.5">
+          <Button onClick={() => window.location.reload()} className="text-xs bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white gap-1.5">
             <RefreshCw className="size-3" /> Reconnect
           </Button>
         </div>

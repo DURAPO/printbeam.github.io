@@ -64,7 +64,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       <nav className="border-b border-border/60 bg-card/80 backdrop-blur-sm">
         <div className="mx-auto flex max-w-5xl items-center px-6 py-3">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5">
-            <div className="flex size-7 items-center justify-center rounded-md bg-success/10 text-success border border-success/20"><Zap className="size-3.5" /></div>
+            <div className="flex size-7 items-center justify-center rounded-md bg-[var(--ring)]/10 text-[var(--ring)] border border-[var(--ring)]/20"><Zap className="size-3.5" /></div>
             <span className="text-xs font-bold tracking-tight">PrintBeam</span>
           </button>
           <ThemeSwitcher />
@@ -85,7 +85,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       <Mail className="absolute left-3 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
                       <Input name="email" placeholder="you@gmail.com" type="email" className="pl-9 text-xs font-mono" disabled={isLoading} required />
                     </div>
-                    <Button type="submit" size="icon" disabled={isLoading} className="bg-success hover:bg-success/90 text-white shrink-0">
+                    <Button type="submit" size="icon" disabled={isLoading} className="bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white shrink-0">
                       {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowRight className="h-3.5 w-3.5" />}
                     </Button>
                   </div>
@@ -117,11 +117,11 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                   </div>
                   {error && <p className="mt-2 text-xs text-destructive text-center">{error}</p>}
                   <p className="text-xs text-muted-foreground text-center mt-4">
-                    Didn't receive a code? <Button variant="link" className="p-0 h-auto text-success text-xs" onClick={() => setStep("signIn")}>try again</Button>
+                    Didn't receive a code? <Button variant="link" className="p-0 h-auto text-[var(--ring)] text-xs" onClick={() => setStep("signIn")}>try again</Button>
                   </p>
                 </CardContent>
                 <CardFooter className="flex-col gap-2">
-                  <Button type="submit" className="w-full text-xs bg-success hover:bg-success/90 text-white" disabled={isLoading || otp.length !== 6}>
+                  <Button type="submit" className="w-full text-xs bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white" disabled={isLoading || otp.length !== 6}>
                     {isLoading ? <><Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> verifying…</> : <>verify code <ArrowRight className="ml-2 h-3.5 w-3.5" /></>}
                   </Button>
                   <Button type="button" variant="ghost" onClick={() => setStep("signIn")} disabled={isLoading} className="w-full text-xs text-muted-foreground">use different email</Button>

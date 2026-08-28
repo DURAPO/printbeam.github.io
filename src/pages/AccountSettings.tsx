@@ -78,7 +78,7 @@ export default function AccountSettings() {
                     <Input type="tel" defaultValue="" placeholder="+1 (555) 000-0000" className="text-xs font-mono" />
                   </div>
                 </div>
-                <Button type="submit" disabled={saving} className="text-xs bg-success hover:bg-success/90 text-white">
+                <Button type="submit" disabled={saving} className="text-xs bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white">
                   {saving ? <Loader2 className="mr-2 size-3 animate-spin" /> : saved ? <CheckCircle className="mr-2 size-3" /> : <Save className="mr-2 size-3" />}
                   {saving ? "Saving…" : saved ? "Saved" : "Save changes"}
                 </Button>

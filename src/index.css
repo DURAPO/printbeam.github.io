@@ -46,128 +46,108 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   LIGHT THEME — Premium monospace terminal feel
-   Clean surfaces, precise accents, serious tone.
-   WCAG AA compliant contrast ratios throughout.
+   DARK THEME (DEFAULT) — Sleek, minimal, developer-grade
+   linear.app / vercel.com aesthetic
    ═══════════════════════════════════════════════════════ */
 :root {
-  --radius: 0.375rem;
+  --radius: 0.5rem;
 
-  /* Core surfaces */
-  --background: #fafaf8;
-  --foreground: #111111;
-  --card: #ffffff;
-  --card-foreground: #111111;
-  --popover: #ffffff;
-  --popover-foreground: #111111;
+  --background: #09090b;
+  --foreground: #fafafa;
 
-  /* Primary — near-black for maximum contrast on light bg */
-  --primary: #111111;
-  --primary-foreground: #fafaf8;
+  --card: #18181b;
+  --card-foreground: #fafafa;
 
-  /* Secondary — warm grey */
-  --secondary: #f0efe9;
-  --secondary-foreground: #1a1a1a;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
 
-  /* Muted — subtle warm tone */
-  --muted: #f0efe9;
-  --muted-foreground: #555555;
+  --primary: #fafafa;
+  --primary-foreground: #09090b;
 
-  /* Accent — green tint for active/success states */
-  --accent: #e8f5e9;
-  --accent-foreground: #1b5e20;
+  --secondary: #27272a;
+  --secondary-foreground: #e4e4e7;
 
-  /* Destructive — high-contrast red */
-  --destructive: #b71c1c;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
 
-  /* Borders & inputs */
-  --border: #e0dfd8;
-  --input: #e0dfd8;
-  --ring: #2e7d32;
+  --accent: #0e7490;
+  --accent-foreground: #ecfeff;
 
-  /* Charts */
-  --chart-1: #2e7d32;
-  --chart-2: #f9a825;
-  --chart-3: #1565c0;
-  --chart-4: #6a1b9a;
-  --chart-5: #c62828;
+  --destructive: #ef4444;
 
-  /* Sidebar */
-  --sidebar: #f0efe9;
-  --sidebar-foreground: #111111;
-  --sidebar-primary: #2e7d32;
-  --sidebar-primary-foreground: #fafaf8;
-  --sidebar-accent: #e8f5e9;
-  --sidebar-accent-foreground: #1b5e20;
-  --sidebar-border: #e0dfd8;
-  --sidebar-ring: #2e7d32;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #06b6d4;
 
-  /* Semantic */
-  --success: #2e7d32;
-  --warning: #f9a825;
-  --surface: #f5f4ef;
+  --chart-1: #22d3ee;
+  --chart-2: #a78bfa;
+  --chart-3: #34d399;
+  --chart-4: #fbbf24;
+  --chart-5: #f87171;
+
+  --sidebar: #0f0f12;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #06b6d4;
+  --sidebar-primary-foreground: #09090b;
+  --sidebar-accent: rgba(6, 182, 212, 0.1);
+  --sidebar-accent-foreground: #22d3ee;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: #06b6d4;
+
+  --success: #22c55e;
+  --warning: #eab308;
+  --surface: #121214;
 }
 
 /* ═══════════════════════════════════════════════════════
-   DARK THEME — Deep surfaces, muted accents
-   All foreground-on-background combos ≥ 7:1 contrast.
+   LIGHT THEME — Clean, off-white, precise accents
    ═══════════════════════════════════════════════════════ */
-.dark {
-  /* Core surfaces */
-  --background: #0a0a0a;
-  --foreground: #ededed;
+.light {
+  --background: #fafaf9;
+  --foreground: #09090b;
 
-  --card: #141414;
-  --card-foreground: #ededed;
+  --card: #ffffff;
+  --card-foreground: #09090b;
 
-  --popover: #141414;
-  --popover-foreground: #ededed;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
 
-  /* Primary — white on near-black */
-  --primary: #ededed;
-  --primary-foreground: #0a0a0a;
+  --primary: #09090b;
+  --primary-foreground: #fafaf9;
 
-  /* Secondary — slightly lighter dark */
-  --secondary: #1a1a1a;
-  --secondary-foreground: #e0e0e0;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
 
-  /* Muted — dim text on dark surfaces */
-  --muted: #1a1a1a;
-  --muted-foreground: #999999;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
 
-  /* Accent — green glow on dark */
-  --accent: #1a3a1a;
-  --accent-foreground: #81c784;
+  --accent: #0e7490;
+  --accent-foreground: #ecfeff;
 
-  /* Destructive — bright red for visibility */
-  --destructive: #ef5350;
+  --destructive: #dc2626;
 
-  /* Borders & inputs */
-  --border: #262626;
-  --input: #262626;
-  --ring: #66bb6a;
+  --border: rgba(0, 0, 0, 0.08);
+  --input: rgba(0, 0, 0, 0.08);
+  --ring: #0891b2;
 
-  /* Charts — brighter for dark bg */
-  --chart-1: #66bb6a;
-  --chart-2: #ffd54f;
-  --chart-3: #42a5f5;
-  --chart-4: #ab47bc;
-  --chart-5: #ef5350;
+  --chart-1: #0891b2;
+  --chart-2: #7c3aed;
+  --chart-3: #059669;
+  --chart-4: #d97706;
+  --chart-5: #dc2626;
 
-  /* Sidebar */
-  --sidebar: #111111;
-  --sidebar-foreground: #ededed;
-  --sidebar-primary: #66bb6a;
-  --sidebar-primary-foreground: #0a0a0a;
-  --sidebar-accent: #1a3a1a;
-  --sidebar-accent-foreground: #81c784;
-  --sidebar-border: #262626;
-  --sidebar-ring: #66bb6a;
+  --sidebar: #fafaf9;
+  --sidebar-foreground: #09090b;
+  --sidebar-primary: #0891b2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(8, 145, 178, 0.08);
+  --sidebar-accent-foreground: #0e7490;
+  --sidebar-border: rgba(0, 0, 0, 0.06);
+  --sidebar-ring: #0891b2;
 
-  /* Semantic */
-  --success: #66bb6a;
-  --warning: #ffd54f;
-  --surface: #111111;
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --surface: #f4f4f5;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -182,8 +162,7 @@
     font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", "Cascadia Code", ui-monospace, monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Smooth theme transitions */
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
   }
   button:not([disabled]),
   [role="button"]:not([disabled]) {
@@ -191,14 +170,21 @@
   }
 }
 
-/* Smooth transitions for theme switching */
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+/* ═══════════════════════════════════════════════════════
+   FROSTED GLASS UTILITY
+   ═══════════════════════════════════════════════════════ */
+.glass {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+.glass-subtle {
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
 }
 
-/* FOUC prevention: disable transitions on initial load */
+/* ═══════════════════════════════════════════════════════
+   THEME TRANSITIONS
+   ═══════════════════════════════════════════════════════ */
 html.no-transition,
 html.no-transition *,
 html.no-transition *::before,
@@ -206,14 +192,40 @@ html.no-transition *::after {
   transition: none !important;
 }
 
-/* Selection color adapts to theme */
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+/* Selection */
 ::selection {
-  background: rgba(46, 125, 50, 0.15);
+  background: rgba(6, 182, 212, 0.2);
   color: var(--foreground);
 }
 
-.dark ::selection {
-  background: rgba(102, 187, 106, 0.2);
+/* ═══════════════════════════════════════════════════════
+   SCROLLBAR — thin, subtle
+   ═══════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -224,15 +236,21 @@ html.no-transition *::after {
 @media (max-width: 640px) {
   button, a, [role="button"] {
     min-height: 44px;
-    min-width: 44px;
   }
 }
 
-/* Constrain max-width on ultra-wide screens */
+/* Constrain on ultrawide */
 @media (min-width: 1440px) {
   .max-w-constrain {
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+/* Bottom nav safe area */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

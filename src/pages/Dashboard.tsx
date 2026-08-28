@@ -1,22 +1,12 @@
-import { motion } from "framer-motion";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import AppShell, { PageHeader, Container } from "@/components/layout/AppShell";
 import {
   Zap,
   Plus,
-  LogOut,
   FileText,
   Clock,
   CheckCircle2,
@@ -41,12 +31,12 @@ const statusConfig: Record<
   },
   accepted: {
     label: "accepted",
-    className: "bg-chart-3/15 text-chart-3 border-chart-3/30",
+    className: "bg-[var(--chart-3)]/15 text-[var(--chart-3)] border-[var(--chart-3)]/30",
     icon: CheckCircle2,
   },
   printing: {
     label: "printing",
-    className: "bg-chart-3/15 text-chart-3 border-chart-3/30",
+    className: "bg-[var(--chart-3)]/15 text-[var(--chart-3)] border-[var(--chart-3)]/30",
     icon: Loader2,
   },
   done: {
@@ -72,15 +62,10 @@ const statusConfig: Record<
 };
 
 export default function Dashboard() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const jobs = useQuery(api.printJobs.listByUser);
   const stats = useQuery(api.printJobs.stats);
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
-  };
 
   const formatDate = (ts: number) => {
     const d = new Date(ts);
@@ -93,89 +78,68 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background font-mono">
-      <header className="border-b border-border/60 bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="mx-auto max-w-5xl flex items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-7 items-center justify-center rounded-md bg-success/10 text-success border border-success/20">
-              <Zap className="size-3.5" />
-            </div>
-            <span className="text-xs font-bold tracking-tight">PrintBeam</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-[11px] text-muted-foreground hidden sm:block">
-              {user?.name || user?.email || "user"}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={handleSignOut}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <LogOut className="size-3.5" />
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl px-6 py-8">
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="text-[11px] text-success font-medium mb-0.5 tracking-wide">
-                // dashboard
-              </p>
-              <h1 className="text-lg font-bold">
-                Welcome{user?.name ? `, ${user.name}` : ""}
-              </h1>
-            </div>
+    <AppShell>
+      <Container className="py-6 sm:py-8">
+        <PageHeader
+          title={`Welcome${user?.name ? `, ${user.name}` : ""}`}
+          subtitle="// dashboard"
+          actions={
             <Button
               onClick={() => navigate("/new-print")}
-              className="text-xs bg-success hover:bg-success/90 text-white gap-1.5"
+              className="text-xs gap-1.5"
             >
               <Plus className="size-3.5" /> New print job
             </Button>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <StatCard
-              label="total orders"
-              value={stats?.total ?? "—"}
-              icon={FileText}
-            />
-            <StatCard
-              label="active"
-              value={stats?.active ?? "—"}
-              icon={Clock}
-              accent="warning"
-            />
-            <StatCard
-              label="completed"
-              value={stats?.completed ?? "—"}
-              icon={CheckCircle2}
-              accent="success"
-            />
-          </div>
+          }
+        />
+
+        {/* Stats grid — responsive */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+          <StatCard
+            label="total orders"
+            value={stats?.total ?? "—"}
+            icon={FileText}
+          />
+          <StatCard
+            label="active"
+            value={stats?.active ?? "—"}
+            icon={Clock}
+            accent="warning"
+          />
+          <StatCard
+            label="completed"
+            value={stats?.completed ?? "—"}
+            icon={CheckCircle2}
+            accent="success"
+          />
+          <StatCard
+            label="printers online"
+            value="—"
+            icon={Zap}
+            accent="info"
+          />
         </div>
 
-        <Card className="border-border">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Your print orders</CardTitle>
-          </CardHeader>
-          <CardContent>
+        {/* Orders section */}
+        <div className="rounded-xl border border-border bg-card">
+          <div className="px-5 py-4 border-b border-border">
+            <h2 className="text-sm font-semibold">Your print orders</h2>
+          </div>
+          <div className="p-5">
             {jobs === undefined ? (
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="h-12 rounded border border-border animate-pulse"
+                    className="h-14 rounded-lg border border-border animate-pulse bg-muted/30"
                   />
                 ))}
               </div>
             ) : jobs.length === 0 ? (
-              <div className="py-12 text-center">
-                <Zap className="size-8 text-muted-foreground/30 mx-auto mb-3" />
-                <p className="text-xs text-muted-foreground mb-4">
-                  No print orders yet. Submit your first one.
+              <div className="py-16 text-center">
+                <Zap className="size-10 text-muted-foreground/20 mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground mb-4">
+                  No print orders yet.
                 </p>
                 <Button
                   onClick={() => navigate("/new-print")}
@@ -186,137 +150,86 @@ export default function Dashboard() {
                 </Button>
               </div>
             ) : (
-              <>
-                {/* Desktop table */}
-                <div className="hidden md:block">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-border">
-                        <TableHead className="text-[11px] text-muted-foreground">
-                          File
-                        </TableHead>
-                        <TableHead className="text-[11px] text-muted-foreground">
-                          Store
-                        </TableHead>
-                        <TableHead className="text-[11px] text-muted-foreground">
-                          Options
-                        </TableHead>
-                        <TableHead className="text-[11px] text-muted-foreground">
-                          Status
-                        </TableHead>
-                        <TableHead className="text-[11px] text-muted-foreground">
-                          Date
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {jobs.map((job) => {
-                        const sc =
-                          statusConfig[job.status] || statusConfig.pending;
-                        const StatusIcon = sc.icon;
-                        return (
-                          <TableRow
-                            key={job._id}
-                            className="border-border cursor-pointer hover:bg-muted/30"
-                            onClick={() => navigate(`/print/${job._id}`)}
-                          >
-                            <TableCell className="text-xs font-medium">
-                              <div className="flex items-center gap-2">
-                                <FileText className="size-3.5 text-muted-foreground shrink-0" />
-                                <span className="truncate max-w-[160px]">
-                                  {job.fileName}
-                                </span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-xs text-muted-foreground">
-                              <span className="truncate max-w-[130px] block">
-                                {job.storeName}
+              /* Desktop table */
+              <div className="overflow-x-auto -mx-5 px-5">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left text-[11px] text-muted-foreground font-medium pb-3 pr-4">
+                        File
+                      </th>
+                      <th className="text-left text-[11px] text-muted-foreground font-medium pb-3 pr-4 hidden sm:table-cell">
+                        Store
+                      </th>
+                      <th className="text-left text-[11px] text-muted-foreground font-medium pb-3 pr-4 hidden md:table-cell">
+                        Options
+                      </th>
+                      <th className="text-left text-[11px] text-muted-foreground font-medium pb-3 pr-4">
+                        Status
+                      </th>
+                      <th className="text-left text-[11px] text-muted-foreground font-medium pb-3 hidden lg:table-cell">
+                        Date
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {jobs.map((job) => {
+                      const sc =
+                        statusConfig[job.status] || statusConfig.pending;
+                      const StatusIcon = sc.icon;
+                      return (
+                        <tr
+                          key={job._id}
+                          className="border-b border-border/50 last:border-0 cursor-pointer hover:bg-muted/30 transition-colors"
+                          onClick={() => navigate(`/print/${job._id}`)}
+                        >
+                          <td className="py-3 pr-4">
+                            <div className="flex items-center gap-2">
+                              <FileText className="size-3.5 text-muted-foreground shrink-0" />
+                              <span className="text-xs font-medium truncate max-w-[180px]">
+                                {job.fileName}
                               </span>
-                            </TableCell>
-                            <TableCell className="text-[11px] text-muted-foreground">
-                              {job.copies}× · {job.colorMode.toUpperCase()} ·{" "}
-                              {job.binding === "none"
-                                ? "no binding"
-                                : job.binding}
-                            </TableCell>
-                            <TableCell>
-                              <Badge
-                                variant="outline"
-                                className={`text-[10px] gap-1 ${sc.className}`}
-                              >
-                                <StatusIcon
-                                  className={`size-2.5 ${
-                                    job.status === "printing" ||
-                                    job.status === "retrying"
-                                      ? "animate-spin"
-                                      : ""
-                                  }`}
-                                />
-                                {sc.label}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-[11px] text-muted-foreground">
-                              {formatDate(job.createdAt)}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
-                {/* Mobile cards */}
-                <div className="md:hidden space-y-3">
-                  {jobs.map((job) => {
-                    const sc =
-                      statusConfig[job.status] || statusConfig.pending;
-                    const StatusIcon = sc.icon;
-                    return (
-                      <div
-                        key={job._id}
-                        className="rounded-lg border border-border bg-background p-3 cursor-pointer"
-                        onClick={() => navigate(`/print/${job._id}`)}
-                      >
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <FileText className="size-3.5 text-muted-foreground shrink-0" />
-                            <span className="text-xs font-medium truncate">
-                              {job.fileName}
+                            </div>
+                          </td>
+                          <td className="py-3 pr-4 text-xs text-muted-foreground hidden sm:table-cell">
+                            <span className="truncate max-w-[140px] block">
+                              {job.storeName}
                             </span>
-                          </div>
-                          <Badge
-                            variant="outline"
-                            className={`text-[10px] gap-1 shrink-0 ml-2 ${sc.className}`}
-                          >
-                            <StatusIcon
-                              className={`size-2.5 ${
-                                job.status === "printing" ||
-                                job.status === "retrying"
-                                  ? "animate-spin"
-                                  : ""
-                              }`}
-                            />
-                            {sc.label}
-                          </Badge>
-                        </div>
-                        <p className="text-[11px] text-muted-foreground mb-1">
-                          {job.storeName}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] text-muted-foreground/70">
+                          </td>
+                          <td className="py-3 pr-4 text-[11px] text-muted-foreground hidden md:table-cell">
                             {job.copies}× · {job.colorMode.toUpperCase()} ·{" "}
+                            {job.binding === "none" ? "no binding" : job.binding}
+                          </td>
+                          <td className="py-3 pr-4">
+                            <Badge
+                              variant="outline"
+                              className={`text-[10px] gap-1 ${sc.className}`}
+                            >
+                              <StatusIcon
+                                className={`size-2.5 ${
+                                  job.status === "printing" ||
+                                  job.status === "retrying"
+                                    ? "animate-spin"
+                                    : ""
+                                }`}
+                              />
+                              {sc.label}
+                            </Badge>
+                          </td>
+                          <td className="py-3 text-[11px] text-muted-foreground hidden lg:table-cell">
                             {formatDate(job.createdAt)}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+          </div>
+        </div>
+      </Container>
+    </AppShell>
   );
 }
 
@@ -329,27 +242,29 @@ function StatCard({
   label: string;
   value: number | string;
   icon: React.ComponentType<{ className?: string }>;
-  accent?: "success" | "warning";
+  accent?: "success" | "warning" | "info";
 }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-3.5">
-      <div className="flex items-center gap-2 mb-2">
+    <div className="rounded-xl border border-border bg-card p-4 transition-colors hover:border-border/80">
+      <div className="flex items-center gap-2 mb-2.5">
         <div
-          className={`size-6 rounded flex items-center justify-center ${
+          className={`size-7 rounded-lg flex items-center justify-center ${
             accent === "success"
               ? "bg-success/15 text-success"
               : accent === "warning"
                 ? "bg-warning/15 text-warning"
-                : "bg-muted text-muted-foreground"
+                : accent === "info"
+                  ? "bg-[var(--ring)]/15 text-[var(--ring)]"
+                  : "bg-muted text-muted-foreground"
           }`}
         >
-          <Icon className="size-3" />
+          <Icon className="size-3.5" />
         </div>
-        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
           {label}
         </span>
       </div>
-      <p className="text-lg font-bold">{value}</p>
+      <p className="text-xl font-bold">{value}</p>
     </div>
   );
 }

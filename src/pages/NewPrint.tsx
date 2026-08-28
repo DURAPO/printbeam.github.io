@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AppShell, { Container } from "@/components/layout/AppShell";
 import {
   CheckCircle2,
   FileUp,
@@ -35,7 +35,7 @@ const COLOR_MODES = [
   { value: "micro" as const, label: "Micro" },
 ];
 
-const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
 function countPdfPages(file: File): Promise<number> {
   return new Promise((resolve) => {
@@ -76,17 +76,16 @@ function Section({
           ? "border-border bg-card"
           : completed
             ? "border-success/20 bg-success/[0.02]"
-            : "border-border/40 bg-muted/30"
+            : "border-border/40 bg-muted/20"
       }`}
     >
-      {/* Header */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-border/50">
+      <div className="flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 border-b border-border/50">
         <div
           className={`flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold transition-colors ${
             completed
               ? "bg-success text-white"
               : active
-                ? "bg-success/10 text-success border border-success/30"
+                ? "bg-[var(--ring)]/10 text-[var(--ring)] border border-[var(--ring)]/30"
                 : "bg-muted text-muted-foreground"
           }`}
         >
@@ -94,7 +93,9 @@ function Section({
         </div>
         <div className="min-w-0">
           <h3
-            className={`text-sm font-semibold ${active || completed ? "text-foreground" : "text-muted-foreground"}`}
+            className={`text-sm font-semibold ${
+              active || completed ? "text-foreground" : "text-muted-foreground"
+            }`}
           >
             {title}
           </h3>
@@ -102,9 +103,10 @@ function Section({
         </div>
       </div>
 
-      {/* Body */}
       <div
-        className={`px-5 py-5 ${!active && !completed ? "opacity-40 pointer-events-none" : ""}`}
+        className={`px-4 sm:px-5 py-4 sm:py-5 ${
+          !active && !completed ? "opacity-40 pointer-events-none" : ""
+        }`}
       >
         {children}
       </div>
@@ -123,7 +125,6 @@ export default function NewPrint() {
   const [submittedOrderId, setSubmittedOrderId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Upload state
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -131,13 +132,11 @@ export default function NewPrint() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Location
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
 
-  // Store state
   const [selectedStoreId, setSelectedStoreId] =
     useState<Id<"stores"> | null>(null);
   const [selectedStoreName, setSelectedStoreName] = useState("");
@@ -150,24 +149,15 @@ export default function NewPrint() {
   } | null>(null);
   const [storeMode, setStoreMode] = useState<"list" | "uid">("list");
 
-  // Options state
-  const [binding, setBinding] = useState<
-    "none" | "one_pin" | "tape" | "spiral"
-  >("none");
+  const [binding, setBinding] = useState<"none" | "one_pin" | "tape" | "spiral">("none");
   const [colorMode, setColorMode] = useState<"bw" | "color" | "micro">("bw");
   const [copies, setCopies] = useState(1);
   const [customerPhone, setCustomerPhone] = useState("");
 
-  // Get user location on mount
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setUserLocation({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          });
-        },
+        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
         () => {}
       );
     }
@@ -175,9 +165,7 @@ export default function NewPrint() {
 
   const onlineStores = useQuery(
     api.stores.listOnline,
-    userLocation
-      ? { latitude: userLocation.lat, longitude: userLocation.lng }
-      : {}
+    userLocation ? { latitude: userLocation.lat, longitude: userLocation.lng } : {}
   );
 
   const sortedStores = onlineStores
@@ -209,7 +197,6 @@ export default function NewPrint() {
   const handleFileSelect = useCallback(
     async (selectedFile: File) => {
       setUploadError(null);
-
       if (selectedFile.type !== "application/pdf") {
         setUploadError("Only PDF files are accepted.");
         return;
@@ -218,10 +205,8 @@ export default function NewPrint() {
         setUploadError("File exceeds 20 MB limit.");
         return;
       }
-
       setFile(selectedFile);
       setIsUploading(true);
-
       try {
         const pages = await countPdfPages(selectedFile);
         setPageCount(pages);
@@ -285,12 +270,9 @@ export default function NewPrint() {
       setSubmittedOrderId(orderId);
       setSubmitted(true);
     } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : "Failed to submit print request.";
+      const msg = err instanceof Error ? err.message : "Failed to submit print request.";
       if (msg.includes("offline")) {
-        setSubmitError(
-          "This store went offline. Pick another store or try again."
-        );
+        setSubmitError("This store went offline. Pick another store or try again.");
       } else {
         setSubmitError(msg);
       }
@@ -331,12 +313,13 @@ export default function NewPrint() {
   /* ── Completed screen ──────────────────────────────────── */
   if (submitted) {
     return (
-      <main className="min-h-screen bg-background font-mono">
-        <div className="mx-auto max-w-lg px-6 py-20 text-center">
+      <AppShell>
+        <div className="min-h-[80vh] flex items-center justify-center px-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
+            className="text-center max-w-md"
           >
             <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-success/10 border border-success/20">
               <CheckCircle2 className="size-8 text-success" />
@@ -344,23 +327,17 @@ export default function NewPrint() {
             <h1 className="text-xl font-bold mb-2">Print request submitted</h1>
             <p className="text-sm text-muted-foreground mb-1">
               Your job at{" "}
-              <span className="text-foreground font-medium">
-                {selectedStoreName}
-              </span>{" "}
+              <span className="text-foreground font-medium">{selectedStoreName}</span>{" "}
               is now in the queue.
             </p>
             {submittedOrderId && (
               <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2">
-                <span className="text-[11px] text-muted-foreground">
-                  Order ID
-                </span>
+                <span className="text-[11px] text-muted-foreground">Order ID</span>
                 <code className="text-xs font-bold text-foreground">
                   {submittedOrderId.slice(-8).toUpperCase()}
                 </code>
                 <button
-                  onClick={() =>
-                    navigator.clipboard.writeText(submittedOrderId)
-                  }
+                  onClick={() => navigator.clipboard.writeText(submittedOrderId)}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Copy className="size-3" />
@@ -368,603 +345,300 @@ export default function NewPrint() {
               </div>
             )}
             <p className="text-xs text-muted-foreground/70 mt-3 mb-8">
-              Track your order from the dashboard. You'll see real-time status
-              updates.
+              Track your order from the dashboard.
             </p>
             <div className="flex gap-3 justify-center">
-              <Button
-                variant="outline"
-                onClick={() => navigate("/dashboard")}
-                className="text-xs"
-              >
+              <Button variant="outline" onClick={() => navigate("/dashboard")} className="text-xs">
                 View dashboard
               </Button>
-              <Button
-                onClick={resetForm}
-                className="text-xs bg-success hover:bg-success/90 text-white"
-              >
-                New print job
+              <Button onClick={resetForm} className="text-xs gap-1.5">
+                <Zap className="size-3" /> New print job
               </Button>
             </div>
           </motion.div>
         </div>
-      </main>
+      </AppShell>
     );
   }
 
-  /* ── Section completion flags ──────────────────────────── */
   const uploadDone = !!file && !!storageId && !isUploading;
   const storeDone = !!selectedStoreId;
-  const optionsDone =
-    !!customerPhone.trim() &&
-    customerPhone.replace(/\D/g, "").length >= 7;
+  const optionsDone = !!customerPhone.trim() && customerPhone.replace(/\D/g, "").length >= 7;
   const canSubmit = uploadDone && storeDone && optionsDone && !isSubmitting;
 
-  return (
-    <main className="min-h-screen bg-background font-mono">
-      {/* Sticky header */}
-      <div className="border-b border-border/60 bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="mx-auto max-w-2xl flex items-center justify-between px-6 py-3">
+  /* ── Upload section content (shared) ────────────────────── */
+  const uploadSection = (
+    <Section number={1} title="Upload document" subtitle="PDF only · Max 20 MB" active={!uploadDone} completed={uploadDone}>
+      {file ? (
+        <div className="rounded-lg border border-border bg-background p-3.5">
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="text-muted-foreground hover:text-foreground transition-colors text-xs"
-            >
-              ← Dashboard
+            <div className="flex size-10 items-center justify-center rounded-lg bg-[var(--ring)]/10 text-[var(--ring)] border border-[var(--ring)]/20">
+              <FileUp className="size-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{file.name}</p>
+              <div className="flex items-center gap-3 mt-0.5">
+                <span className="text-[11px] text-muted-foreground">{formatFileSize(file.size)}</span>
+                <span className="text-[11px] text-success font-medium">Uploaded pages: {pageCount}</span>
+                {isUploading && (
+                  <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                    <Loader2 className="size-3 animate-spin" /> uploading…
+                  </span>
+                )}
+                {storageId && !isUploading && (
+                  <span className="text-[11px] text-success flex items-center gap-1">
+                    <CheckCircle2 className="size-3" /> uploaded
+                  </span>
+                )}
+              </div>
+            </div>
+            <button onClick={() => { setFile(null); setPageCount(0); setStorageId(null); setUploadError(null); }} className="text-muted-foreground hover:text-foreground transition-colors">
+              <X className="size-4" />
             </button>
           </div>
-          <div className="flex items-center gap-2">
-            <Zap className="size-4 text-success" />
-            <span className="text-xs font-bold">New Print Job</span>
+        </div>
+      ) : (
+        <div
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+          onClick={() => fileInputRef.current?.click()}
+          className="flex flex-col items-center gap-3 rounded-lg border-2 border-dashed border-border p-8 sm:p-10 cursor-pointer hover:border-[var(--ring)]/40 hover:bg-[var(--ring)]/[0.03] transition-all"
+        >
+          <div className="flex size-11 items-center justify-center rounded-full bg-muted">
+            <FileUp className="size-5 text-muted-foreground/50" />
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-medium mb-1">Click to upload or drag and drop</p>
+            <p className="text-[11px] text-muted-foreground">PDF only · Max 20 MB</p>
+          </div>
+          <input ref={fileInputRef} type="file" className="hidden" accept="application/pdf" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileSelect(f); }} />
+        </div>
+      )}
+      {uploadError && (
+        <div className="mt-3 flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2">
+          <AlertTriangle className="size-3.5 text-destructive shrink-0" />
+          <p className="text-xs text-destructive">{uploadError}</p>
+        </div>
+      )}
+    </Section>
+  );
+
+  /* ── Store section content (shared) ─────────────────────── */
+  const storeSection = (
+    <Section number={2} title="Select store" subtitle={storeDone ? `Selected: ${selectedStoreName}` : "Choose an available store or enter a Store UID"} active={uploadDone && !storeDone} completed={storeDone}>
+      <div className="flex gap-2 mb-4">
+        <button onClick={() => setStoreMode("list")} className={`flex-1 rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${storeMode === "list" ? "border-[var(--ring)] bg-[var(--ring)]/10 text-[var(--ring)]" : "border-border bg-background text-muted-foreground hover:bg-muted"}`}>
+          <MapPin className="size-3 inline mr-1.5" /> Browse stores
+        </button>
+        <button onClick={() => setStoreMode("uid")} className={`flex-1 rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${storeMode === "uid" ? "border-[var(--ring)] bg-[var(--ring)]/10 text-[var(--ring)]" : "border-border bg-background text-muted-foreground hover:bg-muted"}`}>
+          <Search className="size-3 inline mr-1.5" /> Enter Store UID
+        </button>
+      </div>
+      {storeMode === "list" ? (
+        <>
+          {onlineStores === undefined ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-20 rounded-lg border border-border bg-muted/30 animate-pulse" />
+              ))}
+            </div>
+          ) : sortedStores.length === 0 ? (
+            <div className="py-8 text-center text-sm text-muted-foreground">No stores currently available.</div>
+          ) : (
+            <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+              {sortedStores.map((store) => (
+                <button
+                  key={store._id}
+                  onClick={() => handleSelectStore(store._id, store.name)}
+                  className={`w-full text-left rounded-lg border p-3 transition-all group ${
+                    selectedStoreId === store._id
+                      ? "border-[var(--ring)] bg-[var(--ring)]/5 ring-1 ring-[var(--ring)]/20"
+                      : "border-border bg-background hover:border-[var(--ring)]/40 hover:bg-[var(--ring)]/[0.03]"
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <h3 className="text-sm font-semibold group-hover:text-[var(--ring)] transition-colors truncate">{store.name}</h3>
+                        <Badge variant="outline" className="text-[10px] shrink-0 bg-success/10 text-success border-success/25">{store.status}</Badge>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="size-3 shrink-0" />{store.address.street}, {store.address.city}
+                        </span>
+                        {store.distance !== null && <span className="text-success font-medium">{formatDistance(store.distance)}</span>}
+                      </div>
+                      <p className="text-[11px] text-muted-foreground/60 mt-0.5 ml-4">UID: {store.uid}</p>
+                    </div>
+                    {selectedStoreId === store._id ? <CheckCircle2 className="size-4 text-success shrink-0 mt-1" /> : <Circle className="size-4 text-muted-foreground/30 shrink-0 mt-1" />}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs font-medium block mb-1.5">Store UID</label>
+            <div className="flex gap-2">
+              <Input placeholder="e.g. CR1000007" value={uidInput} onChange={(e) => { setUidInput(e.target.value.toUpperCase()); setUidResult(null); }} className="text-xs font-mono flex-1" />
+              <Button disabled={!uidInput.trim() || uidLookup === undefined || uidLookup === null} variant="outline" className="text-xs"><Search className="size-3" /></Button>
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1">2–4 letters followed by 4–14 digits</p>
+          </div>
+          {uidResult && (
+            <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className={`rounded-lg border p-3 ${uidResult.valid ? "border-success/30 bg-success/5" : "border-destructive/30 bg-destructive/5"}`}>
+              {uidResult.valid ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="size-4 text-success" />
+                    <span className="text-xs font-medium">{uidResult.storeName}</span>
+                  </div>
+                  <Button size="sm" onClick={() => uidResult.storeId && handleSelectStore(uidResult.storeId, uidResult.storeName || "")} className="text-[11px] h-7">Select</Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="size-4 text-destructive shrink-0" />
+                  <span className="text-xs text-destructive">{uidResult.error}</span>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </div>
+      )}
+      {storeDone && (
+        <button onClick={() => { setSelectedStoreId(null); setSelectedStoreName(""); setUidInput(""); setUidResult(null); }} className="mt-3 text-[11px] text-muted-foreground hover:text-foreground transition-colors">
+          Change store
+        </button>
+      )}
+    </Section>
+  );
+
+  /* ── Options section content (shared) ───────────────────── */
+  const optionsSection = (
+    <Section number={3} title="Print options" subtitle={optionsDone ? `${colorMode.toUpperCase()} · ${copies}× · ${BINDING_OPTIONS.find((b) => b.value === binding)?.label || "No binding"}` : "Configure binding, color mode, copies, and contact"} active={storeDone && !optionsDone} completed={optionsDone}>
+      <div className="space-y-5">
+        <div>
+          <label className="text-xs font-medium block mb-2">Binding</label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {BINDING_OPTIONS.map((opt) => (
+              <button key={opt.value} onClick={() => setBinding(opt.value)} className={`rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${binding === opt.value ? "border-[var(--ring)] bg-[var(--ring)]/10 text-[var(--ring)]" : "border-border bg-background text-muted-foreground hover:bg-muted"}`}>
+                {opt.label}
+                {selectedStore && opt.value !== "none" && (
+                  <span className="block text-[10px] text-muted-foreground/70 mt-0.5">₹{selectedStore.rates[opt.value === "one_pin" ? "onePin" : opt.value]}</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <label className="text-xs font-medium block mb-2">Color mode</label>
+          <div className="grid grid-cols-3 gap-2">
+            {COLOR_MODES.map((opt) => (
+              <button key={opt.value} onClick={() => setColorMode(opt.value)} className={`rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${colorMode === opt.value ? "border-[var(--ring)] bg-[var(--ring)]/10 text-[var(--ring)]" : "border-border bg-background text-muted-foreground hover:bg-muted"}`}>
+                {opt.label}
+                {selectedStore && (
+                  <span className="block text-[10px] text-muted-foreground/70 mt-0.5">₹{selectedStore.rates[opt.value === "bw" ? "bwPerPage" : opt.value === "color" ? "colorPerPage" : "microPerPage"]}/pg</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <label className="text-xs font-medium block mb-2">Copies</label>
+          <div className="flex items-center gap-3">
+            <button onClick={() => setCopies(Math.max(1, copies - 1))} className="size-10 rounded-lg border border-border bg-background text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center">−</button>
+            <Input type="number" min={1} max={120} value={copies} onChange={(e) => { const v = parseInt(e.target.value); if (!isNaN(v)) setCopies(Math.min(120, Math.max(1, v))); }} className="w-20 text-center text-sm font-mono" />
+            <button onClick={() => setCopies(Math.min(120, copies + 1))} className="size-10 rounded-lg border border-border bg-background text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center">+</button>
+            <span className="text-[11px] text-muted-foreground">1–120</span>
+          </div>
+        </div>
+        <div>
+          <label className="text-xs font-medium block mb-1.5">Phone number</label>
+          <div className="relative">
+            <Phone className="absolute left-3 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+            <Input placeholder="Your contact number" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} className="text-xs font-mono pl-9" />
           </div>
         </div>
       </div>
+    </Section>
+  );
 
-      <div className="mx-auto max-w-2xl px-6 py-8 space-y-4">
-        {/* ── 1. Upload ──────────────────────────────────── */}
-        <Section
-          number={1}
-          title="Upload document"
-          subtitle="PDF only · Max 20 MB"
-          active={!uploadDone}
-          completed={uploadDone}
-        >
-          {file ? (
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-md bg-success/10 text-success border border-success/20">
-                  <FileUp className="size-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{file.name}</p>
-                  <div className="flex items-center gap-3 mt-0.5">
-                    <span className="text-[11px] text-muted-foreground">
-                      {formatFileSize(file.size)}
-                    </span>
-                    <span className="text-[11px] text-success font-medium">
-                      Uploaded pages: {pageCount}
-                    </span>
-                    {isUploading && (
-                      <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                        <Loader2 className="size-3 animate-spin" />
-                        uploading…
-                      </span>
-                    )}
-                    {storageId && !isUploading && (
-                      <span className="text-[11px] text-success flex items-center gap-1">
-                        <CheckCircle2 className="size-3" />
-                        uploaded
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    setFile(null);
-                    setPageCount(0);
-                    setStorageId(null);
-                    setUploadError(null);
-                  }}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <X className="size-4" />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div
-              onDrop={handleDrop}
-              onDragOver={(e) => e.preventDefault()}
-              onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center gap-3 rounded-lg border-2 border-dashed border-border p-10 cursor-pointer hover:border-success/40 hover:bg-success/[0.03] transition-all"
-            >
-              <div className="flex size-11 items-center justify-center rounded-full bg-muted">
-                <FileUp className="size-5 text-muted-foreground/50" />
-              </div>
-              <div className="text-center">
-                <p className="text-sm font-medium mb-1">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-[11px] text-muted-foreground">
-                  PDF only · Max 20 MB
-                </p>
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="hidden"
-                accept="application/pdf"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) handleFileSelect(f);
-                }}
-              />
-            </div>
-          )}
-
-          {uploadError && (
-            <div className="mt-3 flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2">
-              <AlertTriangle className="size-3.5 text-destructive shrink-0" />
-              <p className="text-xs text-destructive">{uploadError}</p>
-            </div>
-          )}
-        </Section>
-
-        {/* ── 2. Store ───────────────────────────────────── */}
-        <Section
-          number={2}
-          title="Select store"
-          subtitle={
-            storeDone
-              ? `Selected: ${selectedStoreName}`
-              : "Choose an available store or enter a Store UID"
-          }
-          active={uploadDone && !storeDone}
-          completed={storeDone}
-        >
-          {/* Toggle: List vs UID */}
-          <div className="flex gap-2 mb-4">
-            <button
-              onClick={() => setStoreMode("list")}
-              className={`flex-1 rounded-md border px-3 py-2 text-xs font-medium transition-colors ${
-                storeMode === "list"
-                  ? "border-success bg-success/10 text-success"
-                  : "border-border bg-background text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <MapPin className="size-3 inline mr-1.5" />
-              Browse stores
-            </button>
-            <button
-              onClick={() => setStoreMode("uid")}
-              className={`flex-1 rounded-md border px-3 py-2 text-xs font-medium transition-colors ${
-                storeMode === "uid"
-                  ? "border-success bg-success/10 text-success"
-                  : "border-border bg-background text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <Search className="size-3 inline mr-1.5" />
-              Enter Store UID
-            </button>
-          </div>
-
-          {storeMode === "list" ? (
-            <>
-              {onlineStores === undefined ? (
-                <div className="space-y-3">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="h-20 rounded-lg border border-border bg-muted/40 animate-pulse"
-                    />
-                  ))}
-                </div>
-              ) : sortedStores.length === 0 ? (
-                <div className="py-8 text-center text-sm text-muted-foreground">
-                  No stores currently available. Try again later.
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-                  {sortedStores.map((store) => (
-                    <button
-                      key={store._id}
-                      onClick={() =>
-                        handleSelectStore(store._id, store.name)
-                      }
-                      className={`w-full text-left rounded-lg border p-3 transition-all group ${
-                        selectedStoreId === store._id
-                          ? "border-success bg-success/5 ring-1 ring-success/20"
-                          : "border-border bg-background hover:border-success/40 hover:bg-success/[0.03]"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <h3 className="text-sm font-semibold group-hover:text-success transition-colors truncate">
-                              {store.name}
-                            </h3>
-                            <Badge
-                              variant="outline"
-                              className="text-[10px] shrink-0 bg-success/10 text-success border-success/25"
-                            >
-                              {store.status}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <MapPin className="size-3 shrink-0" />
-                              {store.address.street}, {store.address.city}
-                            </span>
-                            {store.distance !== null && (
-                              <span className="text-success font-medium">
-                                {formatDistance(store.distance)}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-[11px] text-muted-foreground/60 mt-0.5 ml-4">
-                            UID: {store.uid}
-                          </p>
-                        </div>
-                        {selectedStoreId === store._id ? (
-                          <CheckCircle2 className="size-4 text-success shrink-0 mt-1" />
-                        ) : (
-                          <Circle className="size-4 text-muted-foreground/30 shrink-0 mt-1" />
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </>
-          ) : (
-            /* UID Entry Mode */
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-medium block mb-1.5">
-                  Store UID
-                </label>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="e.g. CR1000007"
-                    value={uidInput}
-                    onChange={(e) => {
-                      setUidInput(e.target.value.toUpperCase());
-                      setUidResult(null);
-                    }}
-                    className="text-xs font-mono flex-1"
-                  />
-                  <Button
-                    disabled={
-                      !uidInput.trim() ||
-                      uidLookup === undefined ||
-                      uidLookup === null
-                    }
-                    variant="outline"
-                    className="text-xs"
-                  >
-                    <Search className="size-3" />
-                  </Button>
-                </div>
-                <p className="text-[11px] text-muted-foreground mt-1">
-                  2–4 letters followed by 4–14 digits (e.g. "CR1000007")
-                </p>
-              </div>
-
-              {uidResult && (
-                <motion.div
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`rounded-lg border p-3 ${
-                    uidResult.valid
-                      ? "border-success/30 bg-success/5"
-                      : "border-destructive/30 bg-destructive/5"
-                  }`}
-                >
-                  {uidResult.valid ? (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="size-4 text-success" />
-                        <span className="text-xs font-medium">
-                          {uidResult.storeName}
-                        </span>
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          uidResult.storeId &&
-                          handleSelectStore(
-                            uidResult.storeId,
-                            uidResult.storeName || ""
-                          )
-                        }
-                        className="text-[11px] bg-success hover:bg-success/90 text-white h-7"
-                      >
-                        Select
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <AlertTriangle className="size-4 text-destructive shrink-0" />
-                      <span className="text-xs text-destructive">
-                        {uidResult.error}
-                      </span>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </div>
-          )}
-
-          {storeDone && (
-            <button
-              onClick={() => {
-                setSelectedStoreId(null);
-                setSelectedStoreName("");
-                setUidInput("");
-                setUidResult(null);
-              }}
-              className="mt-3 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Change store
-            </button>
-          )}
-        </Section>
-
-        {/* ── 3. Print Options ───────────────────────────── */}
-        <Section
-          number={3}
-          title="Print options"
-          subtitle={
-            optionsDone
-              ? `${colorMode.toUpperCase()} · ${copies}× · ${BINDING_OPTIONS.find((b) => b.value === binding)?.label || "No binding"}`
-              : "Configure binding, color mode, copies, and contact"
-          }
-          active={storeDone && !optionsDone}
-          completed={optionsDone}
-        >
-          <div className="space-y-5">
-            {/* Binding */}
-            <div>
-              <label className="text-xs font-medium block mb-2">Binding</label>
-              <div className="grid grid-cols-4 gap-2">
-                {BINDING_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => setBinding(opt.value)}
-                    className={`rounded-md border px-3 py-2.5 text-xs font-medium transition-colors ${
-                      binding === opt.value
-                        ? "border-success bg-success/10 text-success"
-                        : "border-border bg-background text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {opt.label}
-                    {selectedStore && opt.value !== "none" && (
-                      <span className="block text-[10px] text-muted-foreground/70 mt-0.5">
-                        ₹
-                        {selectedStore.rates[
-                          opt.value === "one_pin"
-                            ? "onePin"
-                            : opt.value
-                        ]}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Color Mode */}
-            <div>
-              <label className="text-xs font-medium block mb-2">
-                Color mode
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {COLOR_MODES.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => setColorMode(opt.value)}
-                    className={`rounded-md border px-3 py-2.5 text-xs font-medium transition-colors ${
-                      colorMode === opt.value
-                        ? "border-success bg-success/10 text-success"
-                        : "border-border bg-background text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {opt.label}
-                    {selectedStore && (
-                      <span className="block text-[10px] text-muted-foreground/70 mt-0.5">
-                        ₹
-                        {
-                          selectedStore.rates[
-                            opt.value === "bw"
-                              ? "bwPerPage"
-                              : opt.value === "color"
-                                ? "colorPerPage"
-                                : "microPerPage"
-                          ]
-                        }
-                        /pg
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Copies */}
-            <div>
-              <label className="text-xs font-medium block mb-2">Copies</label>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setCopies(Math.max(1, copies - 1))}
-                  className="size-9 rounded border border-border bg-background text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center"
-                >
-                  −
-                </button>
-                <Input
-                  type="number"
-                  min={1}
-                  max={120}
-                  value={copies}
-                  onChange={(e) => {
-                    const v = parseInt(e.target.value);
-                    if (!isNaN(v)) setCopies(Math.min(120, Math.max(1, v)));
-                  }}
-                  className="w-20 text-center text-sm font-mono"
-                />
-                <button
-                  onClick={() => setCopies(Math.min(120, copies + 1))}
-                  className="size-9 rounded border border-border bg-background text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center"
-                >
-                  +
-                </button>
-                <span className="text-[11px] text-muted-foreground">
-                  1–120
-                </span>
-              </div>
-            </div>
-
-            {/* Phone Number */}
-            <div>
-              <label className="text-xs font-medium block mb-1.5">
-                Phone number
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-                <Input
-                  placeholder="Your contact number"
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  className="text-xs font-mono pl-9"
-                />
-              </div>
-            </div>
-          </div>
-        </Section>
-
-        {/* ── 4. Review & Submit ─────────────────────────── */}
-        <Section
-          number={4}
-          title="Review & submit"
-          subtitle={
-            canSubmit
-              ? `Estimated total: ₹${estimatedTotal}`
-              : "Complete all sections above to submit"
-          }
-          active={canSubmit}
-          completed={false}
-        >
-          {/* Order summary card */}
-          <Card className="border-border mb-4 bg-background">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Order summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <SummaryRow label="Store" value={selectedStoreName || "—"} />
-              <SummaryRow label="File" value={file?.name || "—"} />
-              <SummaryRow
-                label="Pages"
-                value={pageCount > 0 ? `${pageCount}` : "—"}
-              />
-              <SummaryRow
-                label="Binding"
-                value={
-                  BINDING_OPTIONS.find((b) => b.value === binding)?.label ||
-                  "None"
-                }
-              />
-              <SummaryRow label="Color mode" value={colorMode.toUpperCase()} />
-              <SummaryRow label="Copies" value={`${copies}×`} />
-              <SummaryRow label="Phone" value={customerPhone || "—"} />
-              <div className="border-t border-border pt-2 mt-2">
-                <SummaryRow
-                  label="Estimated total"
-                  value={`₹${estimatedTotal}`}
-                  bold
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {submitError && (
-            <div className="mb-4 rounded-lg border border-destructive/20 bg-destructive/5 p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle className="size-3.5 text-destructive shrink-0" />
-                <p className="text-xs text-destructive font-medium">
-                  {submitError}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    setSubmitError(null);
-                    handleSubmit();
-                  }}
-                  disabled={isSubmitting}
-                  className="text-[11px] h-7"
-                >
-                  Retry
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    setSubmitError(null);
-                    setSelectedStoreId(null);
-                    setSelectedStoreName("");
-                  }}
-                  className="text-[11px] h-7"
-                >
-                  Pick another store
-                </Button>
-              </div>
-            </div>
-          )}
-
-          <Button
-            onClick={handleSubmit}
-            disabled={!canSubmit}
-            className="w-full text-xs bg-success hover:bg-success/90 text-white"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="size-3 animate-spin" /> Submitting…
-              </>
-            ) : (
-              <>
-                <Zap className="size-3" /> Submit print request
-              </>
-            )}
-          </Button>
-        </Section>
+  /* ── Submit section content (shared) ────────────────────── */
+  const submitSection = (
+    <Section number={4} title="Review & submit" subtitle={canSubmit ? `Estimated total: ₹${estimatedTotal}` : "Complete all sections above to submit"} active={canSubmit} completed={false}>
+      <div className="rounded-lg border border-border bg-background p-4 space-y-2 mb-4">
+        <SummaryRow label="Store" value={selectedStoreName || "—"} />
+        <SummaryRow label="File" value={file?.name || "—"} />
+        <SummaryRow label="Pages" value={pageCount > 0 ? `${pageCount}` : "—"} />
+        <SummaryRow label="Binding" value={BINDING_OPTIONS.find((b) => b.value === binding)?.label || "None"} />
+        <SummaryRow label="Color mode" value={colorMode.toUpperCase()} />
+        <SummaryRow label="Copies" value={`${copies}×`} />
+        <SummaryRow label="Phone" value={customerPhone || "—"} />
+        <div className="border-t border-border pt-2 mt-2">
+          <SummaryRow label="Estimated total" value={`₹${estimatedTotal}`} bold />
+        </div>
       </div>
-    </main>
+      {submitError && (
+        <div className="mb-4 rounded-lg border border-destructive/20 bg-destructive/5 p-3">
+          <div className="flex items-center gap-2 mb-2">
+            <AlertTriangle className="size-3.5 text-destructive shrink-0" />
+            <p className="text-xs text-destructive font-medium">{submitError}</p>
+          </div>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => { setSubmitError(null); handleSubmit(); }} disabled={isSubmitting} className="text-[11px] h-7">Retry</Button>
+            <Button size="sm" variant="outline" onClick={() => { setSubmitError(null); setSelectedStoreId(null); setSelectedStoreName(""); }} className="text-[11px] h-7">Pick another store</Button>
+          </div>
+        </div>
+      )}
+      <Button onClick={handleSubmit} disabled={!canSubmit} className="w-full text-xs gap-1.5">
+        {isSubmitting ? <><Loader2 className="size-3 animate-spin" /> Submitting…</> : <><Zap className="size-3" /> Submit print request</>}
+      </Button>
+    </Section>
+  );
+
+  return (
+    <AppShell>
+      <Container className="py-6 sm:py-8">
+        {/* Desktop: back link */}
+        <div className="mb-6 hidden sm:block">
+          <button onClick={() => navigate("/dashboard")} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+            ← Back to dashboard
+          </button>
+        </div>
+
+        {/* Mobile: single column stack */}
+        <div className="space-y-4 sm:hidden">
+          {uploadSection}
+          {storeSection}
+          {optionsSection}
+          {submitSection}
+        </div>
+
+        {/* Tablet+: 2-column layout */}
+        <div className="hidden sm:grid sm:grid-cols-2 gap-6">
+          {/* Left column — Upload + Store */}
+          <div className="space-y-4">
+            {uploadSection}
+            {storeSection}
+          </div>
+          {/* Right column — Options + Submit */}
+          <div className="space-y-4">
+            {optionsSection}
+            {submitSection}
+          </div>
+        </div>
+      </Container>
+    </AppShell>
   );
 }
 
-/* ── Helpers ─────────────────────────────────────────────── */
-function SummaryRow({
-  label,
-  value,
-  bold,
-}: {
-  label: string;
-  value: string;
-  bold?: boolean;
-}) {
+function SummaryRow({ label, value, bold }: { label: string; value: string; bold?: boolean }) {
   return (
     <div className="flex items-baseline justify-between gap-4 text-xs">
       <span className="text-muted-foreground shrink-0">{label}</span>
-      <span
-        className={`text-right truncate ${
-          bold
-            ? "font-bold text-success text-sm"
-            : "font-medium text-foreground"
-        }`}
-      >
-        {value}
-      </span>
+      <span className={`text-right truncate ${bold ? "font-bold text-success text-sm" : "font-medium text-foreground"}`}>{value}</span>
     </div>
   );
 }

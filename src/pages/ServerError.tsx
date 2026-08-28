@@ -48,7 +48,7 @@ export default function ServerError() {
             <Button variant="outline" onClick={() => navigate("/")} className="text-xs gap-1.5">
               <ArrowLeft className="size-3" /> Go home
             </Button>
-            <Button onClick={handleRetry} disabled={retrying} className="text-xs bg-success hover:bg-success/90 text-white">
+            <Button onClick={handleRetry} disabled={retrying} className="text-xs bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white">
               <RefreshCw className={`mr-1.5 size-3 ${retrying ? "animate-spin" : ""}`} />
               {retrying ? "Retrying…" : "Retry"}
             </Button>

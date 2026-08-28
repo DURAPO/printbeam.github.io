@@ -79,7 +79,7 @@ export default function EmailVerification() {
             <Button
               onClick={handleResend}
               disabled={isResending}
-              className="w-full text-xs bg-success hover:bg-success/90 text-white"
+              className="w-full text-xs bg-[var(--ring)] hover:bg-[var(--ring)]/90 text-white"
             >
               {isResending ? (
                 <><Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> Resending…</>
