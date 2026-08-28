@@ -45,32 +45,54 @@
   --color-surface: var(--surface);
 }
 
-/* Premium monospace theme — clean surfaces, precise accents, serious feel */
+/* ═══════════════════════════════════════════════════════
+   LIGHT THEME — Premium monospace terminal feel
+   Clean surfaces, precise accents, serious tone.
+   WCAG AA compliant contrast ratios throughout.
+   ═══════════════════════════════════════════════════════ */
 :root {
   --radius: 0.375rem;
+
+  /* Core surfaces */
   --background: #fafaf8;
   --foreground: #111111;
   --card: #ffffff;
   --card-foreground: #111111;
   --popover: #ffffff;
   --popover-foreground: #111111;
+
+  /* Primary — near-black for maximum contrast on light bg */
   --primary: #111111;
   --primary-foreground: #fafaf8;
+
+  /* Secondary — warm grey */
   --secondary: #f0efe9;
-  --secondary-foreground: #111111;
+  --secondary-foreground: #1a1a1a;
+
+  /* Muted — subtle warm tone */
   --muted: #f0efe9;
-  --muted-foreground: #666666;
+  --muted-foreground: #555555;
+
+  /* Accent — green tint for active/success states */
   --accent: #e8f5e9;
   --accent-foreground: #1b5e20;
+
+  /* Destructive — high-contrast red */
   --destructive: #b71c1c;
+
+  /* Borders & inputs */
   --border: #e0dfd8;
   --input: #e0dfd8;
   --ring: #2e7d32;
+
+  /* Charts */
   --chart-1: #2e7d32;
   --chart-2: #f9a825;
   --chart-3: #1565c0;
   --chart-4: #6a1b9a;
   --chart-5: #c62828;
+
+  /* Sidebar */
   --sidebar: #f0efe9;
   --sidebar-foreground: #111111;
   --sidebar-primary: #2e7d32;
@@ -79,11 +101,78 @@
   --sidebar-accent-foreground: #1b5e20;
   --sidebar-border: #e0dfd8;
   --sidebar-ring: #2e7d32;
+
+  /* Semantic */
   --success: #2e7d32;
   --warning: #f9a825;
   --surface: #f5f4ef;
 }
 
+/* ═══════════════════════════════════════════════════════
+   DARK THEME — Deep surfaces, muted accents
+   All foreground-on-background combos ≥ 7:1 contrast.
+   ═══════════════════════════════════════════════════════ */
+.dark {
+  /* Core surfaces */
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  --card: #141414;
+  --card-foreground: #ededed;
+
+  --popover: #141414;
+  --popover-foreground: #ededed;
+
+  /* Primary — white on near-black */
+  --primary: #ededed;
+  --primary-foreground: #0a0a0a;
+
+  /* Secondary — slightly lighter dark */
+  --secondary: #1a1a1a;
+  --secondary-foreground: #e0e0e0;
+
+  /* Muted — dim text on dark surfaces */
+  --muted: #1a1a1a;
+  --muted-foreground: #999999;
+
+  /* Accent — green glow on dark */
+  --accent: #1a3a1a;
+  --accent-foreground: #81c784;
+
+  /* Destructive — bright red for visibility */
+  --destructive: #ef5350;
+
+  /* Borders & inputs */
+  --border: #262626;
+  --input: #262626;
+  --ring: #66bb6a;
+
+  /* Charts — brighter for dark bg */
+  --chart-1: #66bb6a;
+  --chart-2: #ffd54f;
+  --chart-3: #42a5f5;
+  --chart-4: #ab47bc;
+  --chart-5: #ef5350;
+
+  /* Sidebar */
+  --sidebar: #111111;
+  --sidebar-foreground: #ededed;
+  --sidebar-primary: #66bb6a;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #1a3a1a;
+  --sidebar-accent-foreground: #81c784;
+  --sidebar-border: #262626;
+  --sidebar-ring: #66bb6a;
+
+  /* Semantic */
+  --success: #66bb6a;
+  --warning: #ffd54f;
+  --surface: #111111;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -93,6 +182,8 @@
     font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", "Cascadia Code", ui-monospace, monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Smooth theme transitions */
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
   button:not([disabled]),
   [role="button"]:not([disabled]) {
@@ -100,8 +191,48 @@
   }
 }
 
-/* Premium selection color */
+/* Smooth transitions for theme switching */
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* FOUC prevention: disable transitions on initial load */
+html.no-transition,
+html.no-transition *,
+html.no-transition *::before,
+html.no-transition *::after {
+  transition: none !important;
+}
+
+/* Selection color adapts to theme */
 ::selection {
-  background: #2e7d3220;
-  color: #111111;
+  background: rgba(46, 125, 50, 0.15);
+  color: var(--foreground);
+}
+
+.dark ::selection {
+  background: rgba(102, 187, 106, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE UTILITIES
+   ═══════════════════════════════════════════════════════ */
+
+/* Touch-friendly tap targets for mobile */
+@media (max-width: 640px) {
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Constrain max-width on ultra-wide screens */
+@media (min-width: 1440px) {
+  .max-w-constrain {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }

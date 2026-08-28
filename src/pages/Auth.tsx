@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useAuth } from "@/hooks/use-auth";
 import { ArrowRight, Loader2, Mail, Zap } from "lucide-react";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
@@ -66,6 +67,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
             <div className="flex size-7 items-center justify-center rounded-md bg-success/10 text-success border border-success/20"><Zap className="size-3.5" /></div>
             <span className="text-xs font-bold tracking-tight">PrintBeam</span>
           </button>
+          <ThemeSwitcher />
         </div>
       </nav>
       <div className="flex-1 flex items-center justify-center px-6 py-12">

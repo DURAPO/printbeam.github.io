@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Zap, Shield, Clock, ArrowRight, Layers, Store, Printer } from "lucide-react";
 import { useNavigate } from "react-router";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -31,29 +32,30 @@ export default function Landing() {
     <div className="min-h-screen bg-background font-mono">
       {/* Nav */}
       <nav className="border-b border-border/60 bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4">
           <div className="flex items-center gap-2.5">
             <div className="flex size-8 items-center justify-center rounded-md bg-success/10 text-success border border-success/20">
               <Zap className="size-4" />
             </div>
             <span className="text-sm font-bold tracking-tight">PrintBeam</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ThemeSwitcher />
             <button onClick={() => navigate("/auth")} className="text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5">Sign in</button>
-            <button onClick={() => navigate("/auth")} className="rounded-md bg-foreground text-background px-4 py-2 text-xs font-medium hover:bg-foreground/90 transition-colors">Get started</button>
+            <button onClick={() => navigate("/auth")} className="rounded-md bg-success text-white px-4 py-2 text-xs font-medium hover:bg-success/90 transition-colors">Get started</button>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60">
-        <div className="mx-auto max-w-5xl px-6 py-20 md:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20 md:py-28">
           <motion.div initial="hidden" animate="visible" className="max-w-2xl">
             <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 rounded-full border border-success/20 bg-success/5 px-3 py-1 text-[11px] text-success mb-6 font-medium tracking-wide">
               <span className="size-1.5 rounded-full bg-success" />
               Global print infrastructure
             </motion.div>
-            <motion.h1 variants={fadeUp} custom={1} className="text-3xl md:text-5xl font-bold tracking-tight leading-[1.15]">
+            <motion.h1 variants={fadeUp} custom={1} className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight leading-[1.15]">
               Print anything.<br />In under a minute.
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="mt-5 text-muted-foreground text-sm md:text-base leading-relaxed max-w-lg">
@@ -85,7 +87,7 @@ export default function Landing() {
 
       {/* Stats */}
       <section className="border-b border-border/60 bg-surface/50">
-        <div className="mx-auto max-w-5xl px-6 py-6 grid grid-cols-3 gap-6">
+        <div className="mx-auto max-w-7xl px-6 py-6 grid grid-cols-3 gap-6">
           {stats.map((stat, i) => (
             <motion.div key={stat.label} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
               <p className="text-lg md:text-xl font-bold text-success">{stat.value}</p>
@@ -97,7 +99,7 @@ export default function Landing() {
 
       {/* Capabilities */}
       <section id="capabilities" className="border-b border-border/60">
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-10">
             <p className="text-[11px] text-success font-medium mb-2 tracking-wide">// capabilities</p>
             <h2 className="text-xl md:text-2xl font-bold tracking-tight">Built for speed and reliability.</h2>
@@ -118,7 +120,7 @@ export default function Landing() {
 
       {/* Workflow */}
       <section className="border-b border-border/60">
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-10">
             <p className="text-[11px] text-success font-medium mb-2 tracking-wide">// how it works</p>
             <h2 className="text-xl md:text-2xl font-bold tracking-tight">Two flows. Both simple.</h2>
@@ -170,7 +172,7 @@ export default function Landing() {
 
       {/* CTA */}
       <section>
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-24 text-center">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-24 text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Ready to print?</h2>
             <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">Sign in to submit your first print job, or register your store to start accepting orders.</p>
@@ -188,7 +190,7 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="border-t border-border/60 bg-surface/50">
-        <div className="mx-auto max-w-5xl px-6 py-10">
+        <div className="mx-auto max-w-7xl px-6 py-10">
           <div className="grid gap-8 sm:grid-cols-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-3">
