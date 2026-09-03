@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import {
   Home,
@@ -9,6 +9,8 @@ import {
   Store,
   Zap,
 } from "lucide-react";
+import { MorphIcon } from "morphicons/react";
+import { Menu, X } from "lucide";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 interface AppShellProps {
@@ -57,6 +59,87 @@ function BottomNav() {
         })}
       </div>
     </nav>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE HEADER with MorphIcon hamburger (< 640px)
+   ═══════════════════════════════════════════════════════ */
+function MobileHeader({ open, setOpen }: { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+  const navigate = useNavigate();
+
+  return (
+    <header className="flex sm:hidden sticky top-0 z-50 items-center justify-between border-b border-border bg-card/60 glass px-4 h-14">
+      {/* Logo */}
+      <button
+        onClick={() => { navigate("/dashboard"); setOpen(false); }}
+        className="flex items-center gap-2.5"
+      >
+        <div className="flex size-8 items-center justify-center rounded-lg bg-[var(--ring)]/10 text-[var(--ring)] border border-[var(--ring)]/20">
+          <Zap className="size-4" />
+        </div>
+        <span className="text-sm font-bold tracking-tight">
+          PrintBeam
+        </span>
+      </button>
+
+      {/* Right side: theme toggle + MorphIcon hamburger */}
+      <div className="flex items-center gap-2">
+        <ThemeSwitcher />
+        <button
+          onClick={() => setOpen(o => !o)}
+          aria-expanded={open}
+          aria-label={open ? "Close menu" : "Open menu"}
+          className="flex size-9 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+        >
+          <MorphIcon icon={open ? X : Menu} size={20} />
+        </button>
+      </div>
+    </header>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE DRAWER NAV (toggled by MorphIcon hamburger)
+   ═══════════════════════════════════════════════════════ */
+function MobileDrawer({ open, setOpen }: { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-40 sm:hidden">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={() => setOpen(false)}
+      />
+      {/* Drawer */}
+      <nav className="absolute top-14 right-0 w-64 border-l border-border bg-card/95 glass p-4 shadow-xl">
+        <div className="flex flex-col gap-1">
+          {bottomNavItems.map((item) => {
+            const active =
+              location.pathname === item.path ||
+              (item.path === "/dashboard" && location.pathname.startsWith("/print/"));
+            return (
+              <button
+                key={item.path}
+                onClick={() => { navigate(item.path); setOpen(false); }}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-[var(--ring)]/10 text-[var(--ring)]"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                <item.icon className="size-4" strokeWidth={active ? 2.5 : 1.5} />
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
   );
 }
 
@@ -124,12 +207,16 @@ function TopNav() {
    APP SHELL
    ═══════════════════════════════════════════════════════ */
 export default function AppShell({ children, showNav = true }: AppShellProps) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   if (!showNav) {
     return <>{children}</>;
   }
 
   return (
     <div className="min-h-screen bg-background">
+      <MobileHeader open={drawerOpen} setOpen={setDrawerOpen} />
+      <MobileDrawer open={drawerOpen} setOpen={setDrawerOpen} />
       <TopNav />
       <main className="pb-20 sm:pb-0">{children}</main>
       <BottomNav />
